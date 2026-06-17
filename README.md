@@ -1,4 +1,4 @@
-## Comming Soon
+## Coming Soon
 Lancez le décompte, les labs arrivent le Vendredi 19 Juin ! 
 
 ## labs
