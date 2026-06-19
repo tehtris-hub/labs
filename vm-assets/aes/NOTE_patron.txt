@@ -1,0 +1,11 @@
+Bonjour,
+
+Je vous ai transmis un document de la plus haute importance (c'était marqué dans le mail).
+Il est chiffré avec OpenSSL pour des raisons de confidentialité.
+
+Le mot de passe est l'un de ceux que j'utilise habituellement.
+Vous devriez le reconnaître.
+
+Bonne chance.
+
+  — Le Patron

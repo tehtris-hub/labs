@@ -1,0 +1,3 @@
+Rapport mensuel — rien à signaler côté infrastructure.
+Uptime serveurs : 99.97%
+Sauvegardes : OK

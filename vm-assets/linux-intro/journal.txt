@@ -1,0 +1,14 @@
+2024-01-15 09:12:04 - Connexion SSH réussie depuis 192.168.1.42 (user=alice)
+2024-01-15 09:45:31 - sudo utilisé par cedric : commande /bin/bash
+2024-01-15 10:03:17 - Tentative de connexion échouée : user=admin ip=10.0.0.99
+2024-01-15 10:03:42 - Tentative de connexion échouée : user=admin ip=10.0.0.99
+2024-01-15 10:04:01 - Tentative de connexion échouée : user=admin ip=10.0.0.99
+2024-01-15 10:04:28 - Tentative de connexion échouée : user=root  ip=10.0.0.99
+2024-01-15 10:05:00 - ALERTE : 4 échecs consécutifs depuis 10.0.0.99
+2024-01-15 11:30:22 - Service nginx redémarré par root
+2024-01-15 14:22:56 - Fichier modifié : /etc/passwd (user=cedric)
+2024-01-15 14:23:01 - Fichier modifié : /etc/shadow (user=cedric)
+2024-01-15 17:45:00 - Déconnexion alice (durée session : 8h33m)
+2024-01-16 02:17:33 - Connexion SSH réussie depuis 185.220.101.7 (user=cedric)
+2024-01-16 02:18:11 - sudo utilisé par cedric : commande /usr/bin/wget
+2024-01-16 02:19:45 - Connexion sortante vers 185.220.101.7:4444
