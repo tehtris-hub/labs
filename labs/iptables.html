@@ -171,6 +171,11 @@
 
     <p data-fr="Avant de corriger quoi que ce soit, voyons le désastre que Jimmy a laissé derrière lui." data-en="Before fixing anything, let's see the disaster Jimmy left behind.">Avant de corriger quoi que ce soit, voyons le désastre que Jimmy a laissé derrière lui.</p>
 
+    <div class="info-box" style="border-left-color:#f7c948;">
+      <strong style="color:#f7c948;" data-fr="⚠ COMMANDE QUI GÈLE — PAS DE PANIQUE" data-en="⚠ FREEZING COMMAND — DON'T PANIC">⚠ COMMANDE QUI GÈLE — PAS DE PANIQUE</strong>
+      <span data-fr="Si vous lancez curl -I http://127.0.0.1 maintenant, le terminal va freeze — c'est normal. La politique DROP silencieuse jette les paquets sans répondre, donc curl attend indéfiniment. Appuyez sur Ctrl+C pour interrompre. C'est la preuve que le pare-feu bloque bien le trafic." data-en="If you run curl -I http://127.0.0.1 now, the terminal will freeze — that's expected. The DROP policy silently discards packets without replying, so curl waits forever. Press Ctrl+C to interrupt. This confirms the firewall is blocking traffic.">Si vous lancez <code>curl -I http://127.0.0.1</code> maintenant, le terminal va se figer — c'est normal. La politique <code>DROP</code> silencieuse jette les paquets sans répondre, donc curl attend indéfiniment. Appuyez sur <code>Ctrl+C</code> pour interrompre. C'est la preuve que le pare-feu bloque bien le trafic.</span>
+    </div>
+
     <div class="code-label">inspect_rules.sh</div>
     <pre><code><span class="comment-line"># Voir toutes les règles iptables</span>
 <span class="comment-line"># TODO: quelle commande iptables liste les règles ?</span>
@@ -266,8 +271,8 @@
     <pre><code><span class="comment-line"># Voir toutes les règles finales</span>
 <span class="cmd-line">sudo iptables -L -n -v</span>
 
-<span class="comment-line"># Tester qu'HTTP fonctionne</span>
-<span class="cmd-line">curl -I http://localhost</span>
+<span class="comment-line"># Tester qu'HTTP fonctionne (127.0.0.1 force IPv4 — iptables ne filtre pas IPv6)</span>
+<span class="cmd-line">curl -I http://127.0.0.1</span>
 
 <span class="comment-line"># Sauvegarder les règles (pour qu'elles survivent au reboot)</span>
 <span class="cmd-line">sudo iptables-save > /etc/iptables/rules.v4</span></code></pre>

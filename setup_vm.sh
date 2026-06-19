@@ -58,6 +58,11 @@ done
   || err "Fichier manquant : vm-assets/rsa/message.txt.gpg"
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
+systemd_reload() {
+  # AF_VSOCK warning is a harmless libsystemd noise on VMs without VSOCK support
+  systemctl daemon-reload 2>&1 | grep -v 'AF_VSOCK' >&2 || true
+}
+
 pkg() {
   for p in "$@"; do
     dpkg -s "$p" &>/dev/null || {
@@ -255,7 +260,7 @@ StandardError=null
 WantedBy=multi-user.target
 EOF
 
-  systemctl daemon-reload
+  systemd_reload
   systemctl enable telemetry-agent 2>/dev/null
   systemctl restart telemetry-agent 2>/dev/null || true
 
@@ -277,14 +282,14 @@ EOF
 # Reproduit : bit-bang-main/Common/beginnerPack/iptables/break.sh
 # iptables -P INPUT DROP  (politique par défaut DROP sur INPUT)
 # NOTE : la règle loopback (lo) est intentionnellement ABSENTE de l'état cassé.
-#        Sans elle, curl http://localhost TIME OUT correctement → l'étudiant doit
+#        Sans elle, curl http://127.0.0.1 TIME OUT correctement → l'étudiant doit
 #        ajouter la règle port 80 pour que ça fonctionne.
 #        apache2 est installé et actif pour qu'il y ait quelque chose sur le port 80.
 lab_iptables() {
   banner "iptables"
   pkg iptables apache2
 
-  # apache2 doit tourner pour que curl http://localhost réponde une fois la règle ajoutée
+  # apache2 doit tourner pour que curl http://127.0.0.1 réponde une fois la règle ajoutée
   systemctl enable apache2 2>/dev/null || true
   systemctl start  apache2 2>/dev/null || true
 
@@ -297,14 +302,14 @@ lab_iptables() {
   # Connexions établies (pour que les réponses aux requêtes sortantes passent)
   iptables -C INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT 2>/dev/null || \
     iptables -I INPUT 2 -m state --state ESTABLISHED,RELATED -j ACCEPT
-  # PAS de règle loopback — curl http://localhost doit timeout avant la correction
+  # PAS de règle loopback — curl http://127.0.0.1 doit timeout avant la correction
 
   local dir; dir=$(student_dir iptables)
   cat > "$dir/TICKET_042.txt" <<'EOF'
 TICKET #042 — Site web inaccessible
 =====================================
 Depuis ce matin, le site intranet ne répond plus.
-curl http://localhost → timeout (connexion bloquée par le pare-feu).
+curl http://127.0.0.1 → timeout (connexion bloquée par le pare-feu).
 apache2 tourne bien (systemctl status apache2 = active), mais le trafic entrant est filtré.
 
 Jimmy a "juste testé un truc" hier soir sur le firewall.
@@ -347,7 +352,7 @@ StandardError=null
 WantedBy=multi-user.target
 EOF
 
-  systemctl daemon-reload
+  systemd_reload
   systemctl enable diag-listener 2>/dev/null
   systemctl restart diag-listener 2>/dev/null || true
 

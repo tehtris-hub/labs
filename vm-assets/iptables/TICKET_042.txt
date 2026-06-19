@@ -1,7 +1,7 @@
 TICKET #042 — Site web inaccessible
 =====================================
 Depuis ce matin, le site intranet ne répond plus.
-curl http://localhost → timeout (connexion bloquée par le pare-feu).
+curl http://127.0.0.1 → timeout (connexion bloquée par le pare-feu).
 apache2 tourne bien (systemctl status apache2 = active), mais le trafic entrant est filtré.
 
 Jimmy a "juste testé un truc" hier soir sur le firewall.
