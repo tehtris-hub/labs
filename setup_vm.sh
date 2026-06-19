@@ -276,29 +276,36 @@ EOF
 # ── iptables ──────────────────────────────────────────────────────────────────
 # Reproduit : bit-bang-main/Common/beginnerPack/iptables/break.sh
 # iptables -P INPUT DROP  (politique par défaut DROP sur INPUT)
+# NOTE : la règle loopback (lo) est intentionnellement ABSENTE de l'état cassé.
+#        Sans elle, curl http://localhost TIME OUT correctement → l'étudiant doit
+#        ajouter la règle port 80 pour que ça fonctionne.
+#        apache2 est installé et actif pour qu'il y ait quelque chose sur le port 80.
 lab_iptables() {
   banner "iptables"
-  pkg iptables
+  pkg iptables apache2
+
+  # apache2 doit tourner pour que curl http://localhost réponde une fois la règle ajoutée
+  systemctl enable apache2 2>/dev/null || true
+  systemctl start  apache2 2>/dev/null || true
 
   # Appliquer la politique DROP sur INPUT — comme Jimmy
   iptables -P INPUT DROP
 
-  # S'assurer que SSH reste accessible pour l'apprenant
+  # SSH préservé pour que l'apprenant garde sa connexion
   iptables -C INPUT -p tcp --dport 22 -j ACCEPT 2>/dev/null || \
     iptables -I INPUT 1 -p tcp --dport 22 -j ACCEPT
-  # Loopback toujours autorisé
-  iptables -C INPUT -i lo -j ACCEPT 2>/dev/null || \
-    iptables -I INPUT 1 -i lo -j ACCEPT
-  # Connexions établies
+  # Connexions établies (pour que les réponses aux requêtes sortantes passent)
   iptables -C INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT 2>/dev/null || \
     iptables -I INPUT 2 -m state --state ESTABLISHED,RELATED -j ACCEPT
+  # PAS de règle loopback — curl http://localhost doit timeout avant la correction
 
   local dir; dir=$(student_dir iptables)
   cat > "$dir/TICKET_042.txt" <<'EOF'
 TICKET #042 — Site web inaccessible
 =====================================
 Depuis ce matin, le site intranet ne répond plus.
-curl http://localhost retourne "Connection refused" ou timeout.
+curl http://localhost → timeout (connexion bloquée par le pare-feu).
+apache2 tourne bien (systemctl status apache2 = active), mais le trafic entrant est filtré.
 
 Jimmy a "juste testé un truc" hier soir sur le firewall.
 Jimmy est en vacances jusqu'à lundi.

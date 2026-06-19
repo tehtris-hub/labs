@@ -1,0 +1,15 @@
+TICKET #042 — Site web inaccessible
+=====================================
+Depuis ce matin, le site intranet ne répond plus.
+curl http://localhost → timeout (connexion bloquée par le pare-feu).
+apache2 tourne bien (systemctl status apache2 = active), mais le trafic entrant est filtré.
+
+Jimmy a "juste testé un truc" hier soir sur le firewall.
+Jimmy est en vacances jusqu'à lundi.
+
+Remettre HTTP (port 80) en service.
+
+Indices :
+  sudo iptables -L -n -v      ← voir les règles actuelles
+  sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT   ← solution port 80
+  sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT  ← bonus port 443
