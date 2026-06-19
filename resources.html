@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEHTRI-S-Hub Labs — Ressources</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0a0c0f;
+    --bg2:      #111418;
+    --bg3:      #181c22;
+    --border:   #1e2530;
+    --accent:   #00e5a0;
+    --accent2:  #0af;
+    --accent3:  #f05a28;
+    --text:     #c8d0dc;
+    --text-dim: #5a6580;
+    --text-hi:  #eef2f8;
+    --mono:     'Share Tech Mono', monospace;
+    --sans:     'Barlow', sans-serif;
+    --cond:     'Barlow Condensed', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.15) 2px, rgba(0,0,0,.15) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,12,15,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; gap: 2rem;
+    height: 56px;
+  }
+  .logo {
+    font-family: var(--cond);
+    font-weight: 900;
+    font-size: 1.3rem;
+    letter-spacing: .1em;
+    color: var(--accent);
+    text-transform: uppercase;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .logo span { color: var(--text-dim); font-weight: 300; }
+  nav { display: flex; gap: 0; margin-left: auto; align-items: center; }
+  nav a {
+    font-family: var(--mono);
+    font-size: .75rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0 1rem;
+    height: 56px;
+    display: flex; align-items: center;
+    border-left: 1px solid var(--border);
+    transition: color .2s, background .2s;
+    letter-spacing: .05em;
+  }
+  nav a:hover { color: var(--accent); background: rgba(0,229,160,.04); }
+  nav a.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+  .hero {
+    padding: 5rem 2rem 4rem;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: .7rem;
+    color: var(--accent);
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: .75rem;
+  }
+  .hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 1px;
+    background: var(--accent);
+  }
+  .hero h1 {
+    font-family: var(--cond);
+    font-weight: 900;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1;
+    color: var(--text-hi);
+    letter-spacing: -.01em;
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p { max-width: 560px; color: var(--text-dim); font-size: 1rem; line-height: 1.7; }
+  main { max-width: 1100px; margin: 0 auto; padding: 0 2rem 6rem; }
+  .section-header {
+    display: flex; align-items: baseline; gap: 1rem;
+    margin: 3.5rem 0 1.5rem;
+    padding-bottom: .75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header h2 {
+    font-family: var(--cond);
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-hi);
+  }
+  .section-header .count { font-family: var(--mono); font-size: .7rem; color: var(--text-dim); letter-spacing: .1em; }
+  .section-desc { color: var(--text-dim); font-size: .9rem; margin-bottom: 1.5rem; max-width: 680px; line-height: 1.6; }
+  .link-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: .75rem;
+  }
+  .link-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: .875rem 1rem;
+    display: flex; flex-direction: column; gap: .3rem;
+    text-decoration: none;
+    position: relative; overflow: hidden;
+    transition: border-color .2s, background .2s, transform .15s;
+  }
+  .link-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--card-accent, var(--accent));
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform .2s;
+  }
+  .link-card:hover { border-color: var(--card-accent, var(--accent)); background: var(--bg3); transform: translateY(-1px); }
+  .link-card:hover::before { transform: scaleY(1); }
+  .link-card .card-label { font-family: var(--mono); font-size: .65rem; color: var(--card-accent, var(--accent)); letter-spacing: .12em; text-transform: uppercase; }
+  .link-card .card-title { font-family: var(--sans); font-weight: 600; font-size: .9rem; color: var(--text-hi); line-height: 1.3; }
+  .link-card .card-url { font-family: var(--mono); font-size: .65rem; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: .75rem;
+  }
+  .book-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: .875rem 1rem;
+    display: flex; gap: .875rem;
+    align-items: flex-start;
+    transition: border-color .2s, background .2s;
+    cursor: default;
+  }
+  .book-card:hover { border-color: var(--accent3); background: var(--bg3); }
+  .book-isbn {
+    font-family: var(--mono);
+    font-size: .6rem;
+    color: var(--accent3);
+    letter-spacing: .05em;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    flex-shrink: 0;
+    opacity: .7;
+  }
+  .book-info { flex: 1; min-width: 0; }
+  .book-title { font-weight: 600; font-size: .85rem; color: var(--text-hi); line-height: 1.35; margin-bottom: .25rem; }
+  .book-tag { font-family: var(--mono); font-size: .6rem; color: var(--text-dim); letter-spacing: .08em; }
+  .cat-anssi   { --card-accent: #00e5a0; }
+  .cat-nist    { --card-accent: #0af; }
+  .cat-ms      { --card-accent: #7b8cde; }
+  .cat-mitre   { --card-accent: #f05a28; }
+  .cat-tools   { --card-accent: #f7c948; }
+  .cat-optional{ --card-accent: #a06cf0; }
+  .cat-lab     { --card-accent: #00e5a0; }
+  details > summary {
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: .75rem;
+    color: var(--text-dim);
+    letter-spacing: .1em;
+    list-style: none;
+    display: flex; align-items: center; gap: .5rem;
+    padding: .5rem 0;
+    user-select: none;
+    transition: color .2s;
+  }
+  details > summary:hover { color: var(--accent); }
+  details > summary::before { content: '▶'; font-size: .6rem; transition: transform .2s; }
+  details[open] > summary::before { transform: rotate(90deg); }
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: .7rem;
+    color: var(--text-dim);
+    letter-spacing: .08em;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeUp .45s ease both; }
+  .fade-in:nth-child(2)  { animation-delay: .05s; }
+  .fade-in:nth-child(3)  { animation-delay: .1s; }
+  .fade-in:nth-child(4)  { animation-delay: .15s; }
+  .fade-in:nth-child(5)  { animation-delay: .2s; }
+  .fade-in:nth-child(6)  { animation-delay: .25s; }
+  .fade-in:nth-child(7)  { animation-delay: .3s; }
+  .fade-in:nth-child(8)  { animation-delay: .35s; }
+.i18n-toggle{display:flex;align-items:center;gap:0;margin-left:1.5rem;border:1px solid var(--accent);border-radius:3px;overflow:hidden;flex-shrink:0;}
+  .i18n-toggle button{background:var(--bg2);border:none;cursor:pointer;font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.12em;color:var(--text-dim);padding:5px 12px;line-height:1;transition:background .15s,color .15s;}
+  .i18n-toggle button.on{background:var(--accent);color:#0a0c0f;}
+  .i18n-toggle button:not(.on):hover{background:var(--bg3);color:var(--accent);}
+  .i18n-toggle .i18n-sep{width:1px;background:var(--accent);align-self:stretch;flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="index.html">TEHTRI-S-Hub <span>/ Labs</span></a>
+  <nav>
+    <a href="index.html" data-fr="Accueil" data-en="Home">Accueil</a>
+    <a href="index.html#labs" data-fr="Labs" data-en="Labs">Labs</a>
+    <a href="resources.html" class="active" data-fr="Ressources" data-en="Resources">Ressources</a>
+    <a href="resources.html#books" data-fr="Livres" data-en="Books">Livres</a>
+      <a href="credits.html" data-fr="Crédits" data-en="Credits">Crédits</a>
+  </nav>
+<div class="i18n-toggle"><button id="btn-fr" class="on" onclick="setLang('fr')">FR</button><div class="i18n-sep"></div><button id="btn-en" onclick="setLang('en')">EN</button></div>
+  </header>
+
+<section class="hero">
+  <div class="hero-tag" data-fr="Références &amp; Exercices" data-en="References &amp; Exercises">Références &amp; Exercices</div>
+  <h1><span data-fr="Construire votre" data-en="Build Your">Construire votre</span><br><em data-fr="Arsenal Défensif" data-en="Defensive Arsenal">Arsenal Défensif</em></h1>
+  <p data-fr="Un curriculum structuré couvrant la sécurité des actifs, les opérations de sécurité, la défense réseau et le renseignement sur les menaces." data-en="A curated, structured curriculum covering asset security, security operations, network defense, and threat intelligence.">Un curriculum structuré couvrant la sécurité des actifs, les opérations de sécurité, la défense réseau et le renseignement sur les menaces.</p>
+</section>
+
+<main>
+
+  <!-- ══ TRAINING EXERCISES ══ -->
+  <div id="training" class="section-header">
+    <h2 data-fr="Exercices Pratiques" data-en="Training Exercises">Exercices Pratiques</h2>
+    <span class="count">// hands-on labs</span>
+  </div>
+  <p class="section-desc" data-fr="Exercices pratiques pour renforcer les concepts. Utilisez votre propre VM ou l'environnement fourni. Chaque lab pointe vers la documentation officielle." data-en="Practical exercises to reinforce concepts. Use your own VM or the provided environment. Each lab links to official documentation.">Exercices pratiques pour renforcer les concepts. Utilisez votre propre VM ou l'environnement fourni. Chaque lab pointe vers la documentation officielle.</p>
+
+  <div class="link-grid">
+
+    <!-- Internal labs -->
+    <a href="labs/clamav.html" class="link-card cat-lab fade-in">
+      <span class="card-label">Lab · AV</span>
+      <span class="card-title" data-fr="Installer ClamAV Antivirus — Tutoriel guidé" data-en="Install ClamAV Antivirus — Guided Tutorial">Installer ClamAV Antivirus — Tutoriel guidé</span>
+      <span class="card-url">tehtri-s-hub · lab interne</span>
+    </a>
+    <a href="labs/suricata.html" class="link-card cat-lab fade-in">
+      <span class="card-label">Lab · IDS</span>
+      <span class="card-title" data-fr="Installer Suricata &amp; Activer les Règles — Tutoriel guidé" data-en="Install Suricata &amp; Enable Rules — Guided Tutorial">Installer Suricata &amp; Activer les Règles — Tutoriel guidé</span>
+      <span class="card-url">tehtri-s-hub · lab interne</span>
+    </a>
+    <a href="labs/sysmon.html" class="link-card cat-lab fade-in">
+      <span class="card-label">Lab · Sysmon · Linux</span>
+      <span class="card-title" data-fr="Installer Sysmon pour Linux — Tutoriel guidé" data-en="Install Sysmon for Linux — Guided Tutorial">Installer Sysmon pour Linux — Tutoriel guidé</span>
+      <span class="card-url">tehtri-s-hub · lab interne</span>
+    </a>
+
+    <!-- External resources -->
+    <a href="https://bots.splunk.com/event/3oQ7sqI5bajOCP43o0svqT/detail" target="_blank" rel="noopener" class="link-card cat-tools fade-in">
+      <span class="card-label">SIEM · Splunk</span>
+      <span class="card-title">Boss of the SOC v1</span>
+      <span class="card-url">bots.splunk.com</span>
+    </a>
+    <a href="https://docs.suricata.io/en/latest/quickstart.html" target="_blank" rel="noopener" class="link-card cat-tools fade-in">
+      <span class="card-label">Lab · IDS</span>
+      <span class="card-title" data-fr="Suricata — Documentation officielle" data-en="Install Suricata &amp; Enable Rules">Suricata — Documentation officielle</span>
+      <span class="card-url">docs.suricata.io</span>
+    </a>
+    <a href="https://github.com/microsoft/SysmonForLinux" target="_blank" rel="noopener" class="link-card cat-ms fade-in">
+      <span class="card-label">Lab · Sysmon · Linux</span>
+      <span class="card-title">Install Sysmon for Linux</span>
+      <span class="card-url">github.com/microsoft/SysmonForLinux</span>
+    </a>
+    <a href="https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon" target="_blank" rel="noopener" class="link-card cat-ms fade-in">
+      <span class="card-label">Lab · Sysmon · Windows</span>
+      <span class="card-title">Install Sysmon for Windows</span>
+      <span class="card-url">learn.microsoft.com</span>
+    </a>
+    <a href="https://www.elastic.co/downloads/elasticsearch" target="_blank" rel="noopener" class="link-card cat-tools fade-in">
+      <span class="card-label">Lab · SIEM</span>
+      <span class="card-title" data-fr="Transmettre les logs → Elasticsearch" data-en="Forward Logs → Elasticsearch">Transmettre les logs → Elasticsearch</span>
+      <span class="card-url">elastic.co</span>
+    </a>
+    <a href="https://www.splunk.com/en_us/download/splunk-enterprise.html" target="_blank" rel="noopener" class="link-card cat-tools fade-in">
+      <span class="card-label">Lab · SIEM</span>
+      <span class="card-title" data-fr="Transmettre les logs → Splunk Enterprise" data-en="Forward Logs → Splunk Enterprise">Transmettre les logs → Splunk Enterprise</span>
+      <span class="card-url">splunk.com</span>
+    </a>
+    <a href="https://github.com/SigmaHQ/sigma" target="_blank" rel="noopener" class="link-card cat-mitre fade-in">
+      <span class="card-label">Lab · Detection</span>
+      <span class="card-title" data-fr="Dépôt de règles Sigma" data-en="Sigma Rules Repository">Dépôt de règles Sigma</span>
+      <span class="card-url">github.com/SigmaHQ/sigma</span>
+    </a>
+    <a href="https://github.com/SigmaHQ/sigma-cli" target="_blank" rel="noopener" class="link-card cat-mitre fade-in">
+      <span class="card-label">Lab · Detection</span>
+      <span class="card-title" data-fr="Sigma CLI — Convertir les règles en requêtes SIEM" data-en="Sigma CLI — Convert Rules to SIEM Queries">Sigma CLI — Convertir les règles en requêtes SIEM</span>
+      <span class="card-url">github.com/SigmaHQ/sigma-cli</span>
+    </a>
+    <a href="https://yara.readthedocs.io/en/latest/" target="_blank" rel="noopener" class="link-card cat-mitre fade-in">
+      <span class="card-label">Lab · Malware</span>
+      <span class="card-title" data-fr="Règles YARA — Documentation officielle" data-en="YARA Rules — Official Docs">Règles YARA — Documentation officielle</span>
+      <span class="card-url">yara.readthedocs.io</span>
+    </a>
+    <a href="https://n3nu.medium.com/getting-started-with-yara-a-beginners-guide-to-understanding-and-creating-yara-rules-73bda308fd98" target="_blank" rel="noopener" class="link-card cat-mitre fade-in">
+      <span class="card-label">Lab · Malware</span>
+      <span class="card-title" data-fr="Débuter avec les règles YARA — Guide débutant" data-en="Getting Started with YARA Rules — Beginner's Guide">Débuter avec les règles YARA — Guide débutant</span>
+      <span class="card-url">medium.com</span>
+    </a>
+  </div>
+
+  <!-- ══ REFERENCES ══ -->
+  <div id="references" class="section-header" style="margin-top:4rem;">
+    <h2 data-fr="Bibliothèque de Références" data-en="Reference Library">Bibliothèque de Références</h2>
+    <span class="count">// official standards &amp; guidelines</span>
+  </div>
+  <p class="section-desc" data-fr="Références primaires de l'ANSSI, du NIST, de Microsoft et des organismes de normalisation. Les entreprises françaises sont soumises aux recommandations ANSSI." data-en="Primary references from ANSSI (French national cybersecurity authority), NIST, Microsoft, and industry bodies. French companies may be subject to ANSSI recommendations.">Références primaires de l'ANSSI, du NIST, de Microsoft et des organismes de normalisation. Les entreprises françaises sont soumises aux recommandations ANSSI.</p>
+
+  <!-- Asset Security -->
+  <div class="section-header" style="margin-top:2rem;">
+    <h2 style="font-size:1rem; color: var(--text-dim);" data-fr="Sécurité des Actifs" data-en="Asset Security">Sécurité des Actifs</h2>
+  </div>
+  <div class="link-grid">
+    <a href="https://cyber.gouv.fr/en/publications/guideline-healthy-information-system-42-measures" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Guide : Système d'information sain — 42 mesures" data-en="Guideline: Healthy Information System — 42 Measures">Guide : Système d'information sain — 42 mesures</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/configuration-recommendations-gnulinux-system" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Recommandations de configuration GNU/Linux" data-en="Configuration Recommendations for GNU/Linux Systems">Recommandations de configuration GNU/Linux</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/digital-hygiene-mobile-phones" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Hygiène numérique pour les téléphones mobiles" data-en="Digital Hygiene for Mobile Phones">Hygiène numérique pour les téléphones mobiles</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/recommendations-secure-administration-it-systems" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Recommandations pour l'administration sécurisée des SI" data-en="Recommendations for Secure Administration of IT Systems">Recommandations pour l'administration sécurisée des SI</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://doi.org/10.6028/NIST.SP.800-12r1" target="_blank" rel="noopener" class="link-card cat-nist fade-in">
+      <span class="card-label">NIST SP 800-12r1</span>
+      <span class="card-title" data-fr="Introduction à la sécurité de l'information" data-en="An Introduction to Information Security">Introduction à la sécurité de l'information</span>
+      <span class="card-url">doi.org / NIST</span>
+    </a>
+    <a href="https://doi.org/10.6028/NIST.SP.800-92" target="_blank" rel="noopener" class="link-card cat-nist fade-in">
+      <span class="card-label">NIST SP 800-92</span>
+      <span class="card-title" data-fr="Guide de gestion des journaux de sécurité informatique" data-en="Guide to Computer Security Log Management">Guide de gestion des journaux de sécurité informatique</span>
+      <span class="card-url">doi.org / NIST</span>
+    </a>
+    <a href="https://doi.org/10.6028/NIST.SP.800-123" target="_blank" rel="noopener" class="link-card cat-nist fade-in">
+      <span class="card-label">NIST SP 800-123</span>
+      <span class="card-title" data-fr="Guide de sécurité générale des serveurs" data-en="Guide to General Server Security">Guide de sécurité générale des serveurs</span>
+      <span class="card-url">doi.org / NIST</span>
+    </a>
+    <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/device-management/windows-security-configuration-framework/windows-security-baselines" target="_blank" rel="noopener" class="link-card cat-ms fade-in">
+      <span class="card-label">Microsoft</span>
+      <span class="card-title">Windows Security Baselines</span>
+      <span class="card-url">learn.microsoft.com</span>
+    </a>
+    <a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/appcontrol-design-guide" target="_blank" rel="noopener" class="link-card cat-ms fade-in">
+      <span class="card-label">Microsoft</span>
+      <span class="card-title" data-fr="App Control for Business — Guide de conception" data-en="App Control for Business — Design Guide">App Control for Business — Guide de conception</span>
+      <span class="card-url">learn.microsoft.com</span>
+    </a>
+    <a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/example-appcontrol-base-policies" target="_blank" rel="noopener" class="link-card cat-ms fade-in">
+      <span class="card-label">Microsoft</span>
+      <span class="card-title" data-fr="Exemples de politiques App Control de base" data-en="Example App Control Base Policies">Exemples de politiques App Control de base</span>
+      <span class="card-url">learn.microsoft.com</span>
+    </a>
+  </div>
+
+  <details style="margin-top:1rem;">
+    <summary data-fr="OPTIONNEL / THÈMES SPÉCIFIQUES — Sécurité des actifs" data-en="OPTIONAL / SPECIFIC TOPICS — Asset Security">OPTIONNEL / THÈMES SPÉCIFIQUES — Sécurité des actifs</summary>
+    <div class="link-grid" style="margin-top:.75rem;">
+      <a href="https://cyber.gouv.fr/en/publications/managing-cybersecurity-industrial-control-systems" target="_blank" rel="noopener" class="link-card cat-optional fade-in">
+        <span class="card-label">ANSSI · ICS</span>
+        <span class="card-title" data-fr="Cybersécurité des systèmes de contrôle industriels" data-en="Managing Cybersecurity in Industrial Control Systems">Cybersécurité des systèmes de contrôle industriels</span>
+        <span class="card-url">cyber.gouv.fr</span>
+      </a>
+      <a href="https://cyber.gouv.fr/en/publications/best-practices-cybersecurity-board-ships" target="_blank" rel="noopener" class="link-card cat-optional fade-in">
+        <span class="card-label">ANSSI · Maritime</span>
+        <span class="card-title" data-fr="Bonnes pratiques : cybersécurité à bord des navires" data-en="Best Practices: Cybersecurity on Board Ships">Bonnes pratiques : cybersécurité à bord des navires</span>
+        <span class="card-url">cyber.gouv.fr</span>
+      </a>
+      <a href="https://cyber.gouv.fr/en/publications/hardware-security-requirements-x86-platforms" target="_blank" rel="noopener" class="link-card cat-optional fade-in">
+        <span class="card-label">ANSSI · Hardware</span>
+        <span class="card-title" data-fr="Exigences de sécurité matérielle pour plateformes x86" data-en="Hardware Security Requirements for x86 Platforms">Exigences de sécurité matérielle pour plateformes x86</span>
+        <span class="card-url">cyber.gouv.fr</span>
+      </a>
+      <a href="https://cyber.gouv.fr/en/publications/virtualization" target="_blank" rel="noopener" class="link-card cat-optional fade-in">
+        <span class="card-label">ANSSI · Virtualisation</span>
+        <span class="card-title" data-fr="Sécurité de la virtualisation" data-en="Virtualization Security">Sécurité de la virtualisation</span>
+        <span class="card-url">cyber.gouv.fr</span>
+      </a>
+      <a href="https://cyber.gouv.fr/en/publications/relational-databases" target="_blank" rel="noopener" class="link-card cat-optional fade-in">
+        <span class="card-label">ANSSI · Bases de données</span>
+        <span class="card-title" data-fr="Sécurité des bases de données relationnelles" data-en="Relational Databases Security">Sécurité des bases de données relationnelles</span>
+        <span class="card-url">cyber.gouv.fr</span>
+      </a>
+      <a href="https://cyber.gouv.fr/en/publications/recommendations-hosting-sensitive-information-systems-cloud" target="_blank" rel="noopener" class="link-card cat-optional fade-in">
+        <span class="card-label">ANSSI · Cloud</span>
+        <span class="card-title" data-fr="Hébergement des SI sensibles dans le cloud" data-en="Hosting Sensitive Information Systems in the Cloud">Hébergement des SI sensibles dans le cloud</span>
+        <span class="card-url">cyber.gouv.fr</span>
+      </a>
+      <a href="https://doi.org/10.6028/NIST.SP.800-44ver2" target="_blank" rel="noopener" class="link-card cat-optional fade-in">
+        <span class="card-label">NIST SP 800-44v2</span>
+        <span class="card-title" data-fr="Lignes directrices pour la sécurisation des serveurs web publics" data-en="Guidelines on Securing Public Web Servers">Lignes directrices pour la sécurisation des serveurs web publics</span>
+        <span class="card-url">doi.org / NIST</span>
+      </a>
+    </div>
+  </details>
+
+  <!-- Security Operations -->
+  <div class="section-header" style="margin-top:2rem;">
+    <h2 style="font-size:1rem; color: var(--text-dim);" data-fr="Opérations de Sécurité" data-en="Security Operations">Opérations de Sécurité</h2>
+  </div>
+  <div class="link-grid">
+    <a href="https://doi.org/10.6028/NIST.SP.800-61r3" target="_blank" rel="noopener" class="link-card cat-nist fade-in">
+      <span class="card-label">NIST SP 800-61r3</span>
+      <span class="card-title" data-fr="Recommandations pour la réponse aux incidents" data-en="Incident Response Recommendations">Recommandations pour la réponse aux incidents</span>
+      <span class="card-url">doi.org / NIST</span>
+    </a>
+    <a href="https://doi.org/10.6028/NIST.SP.800-86" target="_blank" rel="noopener" class="link-card cat-nist fade-in">
+      <span class="card-label">NIST SP 800-86</span>
+      <span class="card-title" data-fr="Guide d'intégration des techniques forensiques dans la réponse aux incidents" data-en="Guide to Integrating Forensic Techniques into Incident Response">Guide d'intégration des techniques forensiques dans la réponse aux incidents</span>
+      <span class="card-url">doi.org / NIST</span>
+    </a>
+    <a href="https://doi.org/10.6028/NIST.SP.800-83r1" target="_blank" rel="noopener" class="link-card cat-nist fade-in">
+      <span class="card-label">NIST SP 800-83r1</span>
+      <span class="card-title" data-fr="Guide de prévention et gestion des incidents malware" data-en="Guide to Malware Incident Prevention and Handling">Guide de prévention et gestion des incidents malware</span>
+      <span class="card-url">doi.org / NIST</span>
+    </a>
+    <a href="https://doi.org/10.6028/NIST.SP.800-150" target="_blank" rel="noopener" class="link-card cat-nist fade-in">
+      <span class="card-label">NIST SP 800-150</span>
+      <span class="card-title" data-fr="Guide du partage d'informations sur les cybermenaces" data-en="Guide to Cyber Threat Information Sharing">Guide du partage d'informations sur les cybermenaces</span>
+      <span class="card-url">doi.org / NIST</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/cyber-attacks-and-remediation-remediation-active-directory-tier-0" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI · IR</span>
+      <span class="card-title" data-fr="Remédiation : Active Directory Tier 0" data-en="Remediation: Active Directory Tier 0">Remédiation : Active Directory Tier 0</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/cyber-attacks-and-remediation-keys-decision-making" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI · IR</span>
+      <span class="card-title" data-fr="Cyberattaques &amp; remédiation : clés de décision" data-en="Cyber Attacks &amp; Remediation: Keys to Decision-Making">Cyberattaques &amp; remédiation : clés de décision</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/cyber-attacks-and-remediation-managing-remediation" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI · IR</span>
+      <span class="card-title" data-fr="Cyberattaques &amp; remédiation : gestion de la remédiation" data-en="Cyber Attacks &amp; Remediation: Managing Remediation">Cyberattaques &amp; remédiation : gestion de la remédiation</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/crisis-cyber-origin-keys-operational-and-strategic-management" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI · Crise</span>
+      <span class="card-title" data-fr="Crise d'origine cyber : gestion opérationnelle &amp; stratégique" data-en="Crisis of Cyber Origin: Operational &amp; Strategic Management">Crise d'origine cyber : gestion opérationnelle &amp; stratégique</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+  </div>
+
+  <!-- Communication & Network -->
+  <div class="section-header" style="margin-top:2rem;">
+    <h2 style="font-size:1rem; color: var(--text-dim);" data-fr="Sécurité des Communications &amp; Réseaux" data-en="Communication &amp; Network Security">Sécurité des Communications &amp; Réseaux</h2>
+  </div>
+  <div class="link-grid">
+    <a href="https://doi.org/10.6028/NIST.SP.800-41r1" target="_blank" rel="noopener" class="link-card cat-nist fade-in">
+      <span class="card-label">NIST SP 800-41r1</span>
+      <span class="card-title" data-fr="Lignes directrices sur les pare-feux et la politique de pare-feu" data-en="Guidelines on Firewalls and Firewall Policy">Lignes directrices sur les pare-feux et la politique de pare-feu</span>
+      <span class="card-url">doi.org / NIST</span>
+    </a>
+    <a href="https://doi.org/10.6028/NIST.SP.800-94" target="_blank" rel="noopener" class="link-card cat-nist fade-in">
+      <span class="card-label">NIST SP 800-94</span>
+      <span class="card-title" data-fr="Guide des systèmes de détection et prévention des intrusions (IDPS)" data-en="Guide to Intrusion Detection and Prevention Systems (IDPS)">Guide des systèmes de détection et prévention des intrusions (IDPS)</span>
+      <span class="card-url">doi.org / NIST</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/best-current-practices-acquiring-and-using-domain-names" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Bonnes pratiques : acquisition et utilisation des noms de domaine" data-en="Best Practices: Acquiring and Using Domain Names">Bonnes pratiques : acquisition et utilisation des noms de domaine</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/openssh-secure-use-recommendations" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Recommandations d'utilisation sécurisée d'OpenSSH" data-en="OpenSSH Secure Use Recommendations">Recommandations d'utilisation sécurisée d'OpenSSH</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/recommendations-securing-networks-ipsec" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Recommandations pour la sécurisation des réseaux avec IPsec" data-en="Recommendations for Securing Networks with IPsec">Recommandations pour la sécurisation des réseaux avec IPsec</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/bgp-configuration-best-practices" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Bonnes pratiques de configuration BGP" data-en="BGP Configuration Best Practices">Bonnes pratiques de configuration BGP</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/security-recommendations-tls" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Recommandations de sécurité pour TLS" data-en="Security Recommendations for TLS">Recommandations de sécurité pour TLS</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+  </div>
+
+  <!-- Security Assessment -->
+  <div class="section-header" style="margin-top:2rem;">
+    <h2 style="font-size:1rem; color: var(--text-dim);" data-fr="Évaluation de la Sécurité &amp; Risques" data-en="Security Assessment &amp; Risk">Évaluation de la Sécurité &amp; Risques</h2>
+  </div>
+  <div class="link-grid">
+    <a href="https://cyber.gouv.fr/en/publications/ebios-risk-manager-method" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Méthode EBIOS Risk Manager" data-en="EBIOS Risk Manager Method">Méthode EBIOS Risk Manager</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://www.nist.gov/risk-management" target="_blank" rel="noopener" class="link-card cat-nist fade-in">
+      <span class="card-label">NIST</span>
+      <span class="card-title" data-fr="Cadre de gestion des risques (RMF)" data-en="Risk Management Framework (RMF)">Cadre de gestion des risques (RMF)</span>
+      <span class="card-url">nist.gov</span>
+    </a>
+    <a href="https://doi.org/10.6028/NIST.SP.800-30r1" target="_blank" rel="noopener" class="link-card cat-nist fade-in">
+      <span class="card-label">NIST SP 800-30r1</span>
+      <span class="card-title" data-fr="Guide pour la conduite d'évaluations de risques" data-en="Guide for Conducting Risk Assessments">Guide pour la conduite d'évaluations de risques</span>
+      <span class="card-url">doi.org / NIST</span>
+    </a>
+    <a href="https://doi.org/10.6028/NIST.SP.800-115" target="_blank" rel="noopener" class="link-card cat-nist fade-in">
+      <span class="card-label">NIST SP 800-115</span>
+      <span class="card-title" data-fr="Guide technique des tests et évaluations de sécurité" data-en="Technical Guide to Information Security Testing and Assessment">Guide technique des tests et évaluations de sécurité</span>
+      <span class="card-url">doi.org / NIST</span>
+    </a>
+    <a href="http://www.pentest-standard.org/index.php/PTES_Technical_Guidelines" target="_blank" rel="noopener" class="link-card cat-tools fade-in">
+      <span class="card-label">PTES</span>
+      <span class="card-title" data-fr="Standard d'exécution des tests d'intrusion — Lignes directrices techniques" data-en="Penetration Testing Execution Standard — Technical Guidelines">Standard d'exécution des tests d'intrusion — Lignes directrices techniques</span>
+      <span class="card-url">pentest-standard.org</span>
+    </a>
+  </div>
+
+  <!-- Defensive Techniques -->
+  <div class="section-header" style="margin-top:2rem;">
+    <h2 style="font-size:1rem; color: var(--text-dim);" data-fr="Techniques Défensives &amp; Threat Intelligence" data-en="Defensive Techniques &amp; Threat Intelligence">Techniques Défensives &amp; Threat Intelligence</h2>
+  </div>
+  <div class="link-grid">
+    <a href="https://www.lockheedmartin.com/en-us/capabilities/cyber/cyber-kill-chain.html" target="_blank" rel="noopener" class="link-card cat-mitre fade-in">
+      <span class="card-label">Lockheed Martin</span>
+      <span class="card-title" data-fr="Cadre Cyber Kill Chain" data-en="Cyber Kill Chain Framework">Cadre Cyber Kill Chain</span>
+      <span class="card-url">lockheedmartin.com</span>
+    </a>
+    <a href="https://attack.mitre.org/resources/" target="_blank" rel="noopener" class="link-card cat-mitre fade-in">
+      <span class="card-label">MITRE ATT&amp;CK</span>
+      <span class="card-title" data-fr="Ressources ATT&amp;CK" data-en="ATT&amp;CK Resources">Ressources ATT&amp;CK</span>
+      <span class="card-url">attack.mitre.org</span>
+    </a>
+    <a href="https://medium.com/mitre-attack/getting-started-with-attack-detection-a8e49e4960d0" target="_blank" rel="noopener" class="link-card cat-mitre fade-in">
+      <span class="card-label">MITRE ATT&amp;CK</span>
+      <span class="card-title" data-fr="Débuter avec la détection ATT&amp;CK" data-en="Getting Started with ATT&amp;CK Detection">Débuter avec la détection ATT&amp;CK</span>
+      <span class="card-url">medium.com / MITRE</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/data-leak-prevention" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Prévention des fuites de données" data-en="Data Leak Prevention">Prévention des fuites de données</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/distributed-denial-service-ddos" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Déni de service distribué (DDoS)" data-en="Distributed Denial of Service (DDoS)">Déni de service distribué (DDoS)</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/ransomware-attacks-all-concerned-how-prevent-them-and-respond-incident" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Attaques par rançongiciel : prévention et réponse à incident" data-en="Ransomware Attacks: Prevention and Incident Response">Attaques par rançongiciel : prévention et réponse à incident</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/zero-trust-architecture" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Architecture Zero Trust" data-en="Zero Trust Architecture">Architecture Zero Trust</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/golden-rules-backup" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Règles d'or pour les sauvegardes" data-en="Golden Rules for Backup">Règles d'or pour les sauvegardes</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+    <a href="https://cyber.gouv.fr/en/publications/mapping-information-system" target="_blank" rel="noopener" class="link-card cat-anssi fade-in">
+      <span class="card-label">ANSSI</span>
+      <span class="card-title" data-fr="Cartographie du système d'information" data-en="Mapping the Information System">Cartographie du système d'information</span>
+      <span class="card-url">cyber.gouv.fr</span>
+    </a>
+  </div>
+
+  <!-- ══ BOOKS ══ -->
+  <div id="books" class="section-header" style="margin-top:4rem;">
+    <h2 data-fr="Livres de Référence" data-en="Reference Books">Livres de Référence</h2>
+    <span class="count">// recommended readings</span>
+  </div>
+  <p class="section-desc" data-fr="Lectures essentielles couvrant les opérations SOC, l'analyse réseau, les malwares, la forensique mémoire et les tests d'intrusion." data-en="Essential reading list covering SOC operations, network analysis, malware, memory forensics, and penetration testing.">Lectures essentielles couvrant les opérations SOC, l'analyse réseau, les malwares, la forensique mémoire et les tests d'intrusion.</p>
+
+  <div class="book-grid">
+    <div class="book-card fade-in"><span class="book-isbn">978-1091493896</span><div class="book-info"><div class="book-title">Blue Team Handbook: SOC, SIEM, and Threat Hunting (V1.02)</div><div class="book-tag">SOC · SIEM · THREAT HUNTING</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-0321336323</span><div class="book-info"><div class="book-title">Virtual Honeypots: From Botnet Tracking to Intrusion Detection</div><div class="book-tag">HONEYPOTS · DECEPTION</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-1593278021</span><div class="book-info"><div class="book-title">Practical Packet Analysis</div><div class="book-tag">NETWORK · FORENSICS</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-1491910955</span><div class="book-info"><div class="book-title">Network Security Assessment: Know Your Network</div><div class="book-tag">NETWORK · ASSESSMENT</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-1593277505</span><div class="book-info"><div class="book-title">Attacking Network Protocols</div><div class="book-tag">NETWORK · EXPLOITATION</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-1118824993</span><div class="book-info"><div class="book-title">The Art of Memory Forensics</div><div class="book-tag">FORENSICS · MALWARE · WINDOWS/LINUX/MAC</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-1593272906</span><div class="book-info"><div class="book-title">Practical Malware Analysis</div><div class="book-tag">MALWARE · REVERSE ENGINEERING</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-1593272883</span><div class="book-info"><div class="book-title">Metasploit: The Penetration Tester's Guide</div><div class="book-tag">PENTEST · EXPLOITATION</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-1593271442</span><div class="book-info"><div class="book-title">Hacking, 2nd Edition</div><div class="book-tag">EXPLOITATION · FUNDAMENTALS</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-0979958717</span><div class="book-info"><div class="book-title">Nmap Network Scanning</div><div class="book-tag">RECON · NETWORK DISCOVERY</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-0321294319</span><div class="book-info"><div class="book-title">Rootkits: Subverting the Windows Kernel</div><div class="book-tag">ROOTKITS · KERNEL</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-0735684188</span><div class="book-info"><div class="book-title">Windows Internals, Part 1</div><div class="book-tag">WINDOWS · OS INTERNALS</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-0135462409</span><div class="book-info"><div class="book-title">Windows Internals, Part 2</div><div class="book-tag">WINDOWS · OS INTERNALS</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-1718503359</span><div class="book-info"><div class="book-title">Evading EDR: The Definitive Guide to Defeating Endpoint Detection Systems</div><div class="book-tag">EDR · EVASION</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-1787399051</span><div class="book-info"><div class="book-title">RTFM: Red Team Field Manual</div><div class="book-tag">RED TEAM · REFERENCE</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-1449392680</span><div class="book-info"><div class="book-title">Introducing Regular Expressions</div><div class="book-tag">REGEX · FUNDAMENTALS</div></div></div>
+    <div class="book-card fade-in"><span class="book-isbn">978-0596528126</span><div class="book-info"><div class="book-title">Mastering Regular Expressions</div><div class="book-tag">REGEX · ADVANCED</div></div></div>
+  </div>
+
+</main>
+
+<footer>
+  TEHTRI-S-Hub Labs &nbsp;·&nbsp; <span data-fr="Références &amp; Documentation" data-en="References &amp; Documentation">Références &amp; Documentation</span>
+</footer>
+
+<script>
+  (function(){setLang(localStorage.getItem('lang')||'fr');})();
+  function setLang(l){
+    localStorage.setItem('lang',l);
+    document.documentElement.lang=l;
+    document.querySelectorAll('[data-fr][data-en]').forEach(function(e){e.textContent=e.dataset[l];});
+    var f=document.getElementById('btn-fr'),n=document.getElementById('btn-en');
+    if(f&&n){f.classList.toggle('on',l==='fr');n.classList.toggle('on',l==='en');}
+  }
+</script>
+</body>
+</html>

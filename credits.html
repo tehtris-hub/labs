@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credits — TEHTRI-S-Hub Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0a0c0f;
+    --bg2:      #111418;
+    --bg3:      #181c22;
+    --border:   #1e2530;
+    --accent:   #00e5a0;
+    --accent2:  #0af;
+    --accent3:  #f05a28;
+    --text:     #c8d0dc;
+    --text-dim: #5a6580;
+    --text-hi:  #eef2f8;
+    --mono:     'Share Tech Mono', monospace;
+    --sans:     'Barlow', sans-serif;
+    --cond:     'Barlow Condensed', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+  }
+
+  /* ── header ── */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 52px;
+    background: rgba(10,12,15,.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { font-family: var(--cond); font-size: 1.1rem; font-weight: 700;
+    color: var(--accent); text-decoration: none; letter-spacing: .08em; }
+  .logo span { color: var(--text-dim); font-weight: 400; }
+  nav { display: flex; gap: 1.6rem; }
+  nav a { color: var(--text-dim); text-decoration: none; font-size: .85rem;
+    letter-spacing: .04em; transition: color .2s; }
+  nav a:hover { color: var(--accent); }
+  .i18n-toggle{display:flex;align-items:center;gap:0;margin-left:1.5rem;border:1px solid var(--accent);border-radius:3px;overflow:hidden;flex-shrink:0;}
+  .i18n-toggle button{background:var(--bg2);border:none;cursor:pointer;font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.12em;color:var(--text-dim);padding:5px 12px;line-height:1;transition:background .15s,color .15s;}
+  .i18n-toggle button.on{background:var(--accent);color:#0a0c0f;}
+  .i18n-toggle button:not(.on):hover{background:var(--bg3);color:var(--accent);}
+  .i18n-toggle .i18n-sep{width:1px;background:var(--accent);align-self:stretch;flex-shrink:0;}
+
+  /* ── scanlines overlay ── */
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.08) 2px, rgba(0,0,0,.08) 4px);
+  }
+
+  /* ── stage ── */
+  #stage {
+    position: fixed; inset: 0; top: 52px;
+    display: flex; flex-direction: column; align-items: center;
+    overflow: hidden;
+    background: radial-gradient(ellipse at center bottom, #0d1a12 0%, var(--bg) 70%);
+  }
+
+  /* top & bottom fade masks */
+  #stage::before, #stage::after {
+    content: ''; position: absolute; left: 0; right: 0; z-index: 10; pointer-events: none;
+  }
+  #stage::before { top: 0; height: 120px;
+    background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%); }
+  #stage::after  { bottom: 0; height: 180px;
+    background: linear-gradient(to top, var(--bg) 0%, transparent 100%); }
+
+  /* ── scrolling reel ── */
+  #reel {
+    position: absolute;
+    width: 100%; max-width: 680px;
+    left: 50%;
+    top: 100%; /* starts fully below stage */
+    padding: 0 2rem 40vh;
+    animation: roll 135s linear forwards;
+    animation-play-state: running;
+  }
+  #reel.paused { animation-play-state: paused; }
+
+  @keyframes roll {
+    from { transform: translateX(-50%) translateY(0); }
+    to   { transform: translateX(-50%) translateY(var(--roll-to)); }
+  }
+
+  /* ── credit blocks ── */
+  .block {
+    text-align: center;
+    margin-bottom: 3.2rem;
+  }
+  .section-title {
+    font-family: var(--cond);
+    font-size: 1.55rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: .4rem;
+    text-shadow: 0 0 18px rgba(0,229,160,.35);
+  }
+  .section-rule {
+    width: 120px; height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent), transparent);
+    margin: .6rem auto 1.8rem;
+  }
+
+  .credit-line { margin-bottom: 2.2rem; }
+  .compact-credits {
+    font-family: var(--mono);
+    font-size: .78rem;
+    color: var(--text-dim);
+    line-height: 1.9;
+    margin-top: .4rem;
+    letter-spacing: .02em;
+  }
+  .compact-credits::before { content: '[ '; color: var(--accent); }
+  .compact-credits::after  { content: ' ]'; color: var(--accent); }
+  .role {
+    display: block;
+    font-family: var(--mono);
+    font-size: .68rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: .1rem;
+  }
+  .name {
+    display: block;
+    font-family: var(--cond);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-hi);
+    letter-spacing: .05em;
+  }
+  .name.cat { color: #ffd166; }
+  .name.you { color: var(--accent2); }
+  .name.nobody { color: var(--text-dim); font-style: italic; }
+  .desc {
+    display: block;
+    font-size: .82rem;
+    color: var(--text-dim);
+    margin-top: .2rem;
+    font-style: italic;
+  }
+
+  /* congratulation cards */
+  .congrats {
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: .9rem 1.4rem;
+    margin-bottom: .7rem;
+    background: rgba(0,229,160,.04);
+    font-family: var(--mono);
+    font-size: .88rem;
+    color: var(--accent);
+    letter-spacing: .03em;
+    text-shadow: 0 0 8px rgba(0,229,160,.3);
+  }
+  .congrats .prefix { color: var(--text-dim); }
+
+  /* terminal-style achievement */
+  .achievement {
+    background: #0d1a12;
+    border: 1px solid #1a3a28;
+    border-radius: 4px;
+    padding: .8rem 1.2rem;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: .78rem;
+    margin-bottom: .7rem;
+    color: #6ee7b7;
+  }
+  .achievement .prompt { color: var(--accent); }
+  .achievement .comment { color: var(--text-dim); }
+
+  /* big titles */
+  .big-title {
+    font-family: var(--cond);
+    font-size: 2.6rem;
+    font-weight: 900;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: .5rem;
+    text-shadow: 0 0 40px rgba(0,229,160,.4);
+  }
+  .big-sub {
+    font-family: var(--mono);
+    font-size: .8rem;
+    color: var(--text-dim);
+    letter-spacing: .15em;
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  .spacer { height: 4rem; }
+  .spacer-sm { height: 2rem; }
+
+  /* ── controls ── */
+  #controls {
+    position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 50;
+    display: flex; gap: .6rem;
+  }
+  #controls button {
+    background: var(--bg2); border: 1px solid var(--border);
+    color: var(--text-dim); font-family: var(--mono); font-size: .7rem;
+    padding: 6px 14px; border-radius: 3px; cursor: pointer;
+    transition: border-color .15s, color .15s;
+    letter-spacing: .1em;
+  }
+  #controls button:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── final flash ── */
+  #fin {
+    position: fixed; inset: 0; top: 52px; z-index: 200;
+    display: none; align-items: center; justify-content: center;
+    flex-direction: column; gap: 1rem;
+    background: var(--bg);
+  }
+  #fin .fin-title {
+    font-family: var(--cond); font-size: 3rem; font-weight: 900;
+    color: var(--accent); letter-spacing: .2em;
+    text-shadow: 0 0 60px rgba(0,229,160,.5);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  #fin p { font-family: var(--mono); font-size: .8rem; color: var(--text-dim); letter-spacing: .12em; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+  /* flicker glitch on section titles */
+  @keyframes flicker {
+    0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:.4} 95%{opacity:1} 97%{opacity:.6} 98%{opacity:1}
+  }
+  .section-title { animation: flicker 6s infinite; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="index.html">TEHTRI-S-Hub <span>/ Labs</span></a>
+  <nav>
+    <a href="index.html" data-fr="Accueil" data-en="Home">Accueil</a>
+    <a href="index.html#labs" data-fr="Labs" data-en="Labs">Labs</a>
+    <a href="resources.html" data-fr="Ressources" data-en="Resources">Ressources</a>
+    <a href="resources.html#books" data-fr="Livres" data-en="Books">Livres</a>
+    <a href="credits.html" class="active" data-fr="Crédits" data-en="Credits">Crédits</a>
+  </nav>
+  <div class="i18n-toggle">
+    <button id="btn-fr" class="on" onclick="setLang('fr')">FR</button>
+    <div class="i18n-sep"></div>
+    <button id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
+</header>
+
+<div id="stage">
+  <div id="reel">
+
+    <!-- ══ OPENING ══ -->
+    <div class="spacer"></div>
+    <div class="big-title">TEHTRI-S-HUB LABS</div>
+    <div class="big-sub" data-fr="// une production que personne n'a demandée mais dont tout le monde avait besoin" data-en="// a production nobody asked for but everyone needed">// une production que personne n'a demandée mais dont tout le monde avait besoin</div>
+
+    <div class="achievement">
+      <span class="prompt">$ </span>git log --oneline --all | wc -l<br>
+      <span style="color:#fff">42</span><br>
+      <span class="comment" data-fr="# significatif. vraiment significatif." data-en="# meaningful. very meaningful."># significatif. vraiment significatif.</span>
+    </div>
+    <div class="spacer-sm"></div>
+
+    <!-- ══ CAST ══ -->
+    <div class="block">
+      <div class="section-title" data-fr="Cast" data-en="Cast">Cast</div>
+      <div style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim);letter-spacing:.1em;text-align:center;margin-bottom:1rem;">the <code style="background:var(--bg3);color:var(--accent);padding:2px 7px;border-radius:3px;font-size:.85em;border:1px solid var(--border)">bit-bang.org</code> project</div>
+      <div class="section-rule"></div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Chemin débutant · Blagues · Débogage nocturne" data-en="Beginner Path · Fun Jokes · Late Night Debugging">Chemin débutant · Blagues · Débogage nocturne</span>
+        <span class="name">Manon</span>
+        <span class="desc" data-fr="«T'es sûr que c'est censé afficher Permission denied ?»" data-en="&quot;Are you sure this is supposed to say Permission denied ?&quot;">«T'es sûr que c'est censé afficher Permission denied ?»</span>
+      </div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Quelques lignes de code · Références" data-en="Some Lines of Code · References">Quelques lignes de code · Références</span>
+        <span class="name">Rémi</span>
+        <span class="desc" data-fr="A fait de son mieux." data-en="Did his best.">A fait de son mieux.</span>
+      </div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Commits nocturnes · Câlins intempestifs" data-en="Late Night Commits · Wrong-Timing Cuddles">Commits nocturnes · Câlins intempestifs</span>
+        <span class="name cat">Paté le chat 🐈‍⬛</span>
+        <span class="desc" data-fr="S'est assis sur le clavier. A poussé en prod. Aucun regret." data-en="Sat on the keyboard. Pushed to prod. No regrets.">S'est assis sur le clavier. A poussé en prod. Aucun regret.</span>
+      </div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Redémarrages inopinés · Touches involontaires" data-en="Unexpected Reboots · Unwanted Keyboard Strokes">Redémarrages inopinés · Touches involontaires</span>
+        <span class="name cat">Archi le chat 🩶</span>
+        <span class="desc" data-fr="A supprimé trois fichiers et réclamé à manger aussitôt." data-en="Deleted three files and asked for food immediately after.">A supprimé trois fichiers et réclamé à manger aussitôt.</span>
+      </div>
+    </div>
+
+    <!-- ══ CONGRATULATIONS I ══ -->
+    <div class="block">
+      <div class="section-title" data-fr="Succès Débloqué" data-en="Achievement Unlocked">Succès Débloqué</div>
+      <div class="section-rule"></div>
+
+      <div class="congrats"><span class="prefix">[ OK ] </span><span data-fr="Vous avez ouvert un terminal sans Googler «comment ouvrir un terminal»" data-en="You opened a terminal without Googling &quot;how to open terminal&quot;">Vous avez ouvert un terminal sans Googler «comment ouvrir un terminal»</span></div>
+      <div class="congrats"><span class="prefix">[ OK ] </span><span data-fr="Vous avez tapé une commande qui a marché du premier coup" data-en="You typed a command that actually worked on the first try">Vous avez tapé une commande qui a marché du premier coup</span></div>
+      <div class="congrats"><span class="prefix">[ OK ] </span><span data-fr="Vous avez survécu à un Permission denied sans faire sudo rm -rf /" data-en="You survived a Permission denied and did NOT sudo rm -rf /">Vous avez survécu à un Permission denied sans faire sudo rm -rf /</span></div>
+      <div class="congrats"><span class="prefix">[ OK ] </span><span data-fr="Vous avez lu le message d'erreur au lieu de fermer la fenêtre" data-en="You read an error message instead of closing the window">Vous avez lu le message d'erreur au lieu de fermer la fenêtre</span></div>
+    </div>
+
+    <!-- ══ PRODUCTION ══ -->
+    <div class="block">
+      <div class="section-title" data-fr="Production" data-en="Production">Production</div>
+      <div class="section-rule"></div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Jargon File · Origine de «Bit-Bang»" data-en="Jargon File · Origin of &quot;Bit-Bang&quot;">Jargon File · Origine de «Bit-Bang»</span>
+        <span class="name">Eric S. Raymond <span style="font-size:.8rem;color:var(--text-dim)">(catb.org)</span></span>
+        <span class="desc" data-fr="Le Jargon File — lecture obligatoire pour quiconque tape sur un clavier." data-en="The Jargon File — required reading for anyone who types for a living.">Le Jargon File — lecture obligatoire pour quiconque tape sur un clavier.</span>
+      </div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="SFX · Ambiance · Logistique du Frigo" data-en="SFX · Ambiance · Fridge Logistics">SFX · Ambiance · Logistique du Frigo</span>
+        <span class="name nobody">Nobody</span>
+        <span class="desc" data-fr="Le frigo ne se vide pas tout seul. Enfin..." data-en="The fridge doesn't empty itself. Or does it?">Le frigo ne se vide pas tout seul. Enfin...</span>
+      </div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Restauration · Soutien émotionnel à 3h du mat" data-en="Catering · 3 AM Emotional Support">Restauration · Soutien émotionnel à 3h du mat</span>
+        <span class="name nobody">Nobody</span>
+        <span class="desc" data-fr="Il y avait du café. Il y a toujours du café." data-en="There was coffee. There is always coffee.">Il y avait du café. Il y a toujours du café.</span>
+      </div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Soutien associatif" data-en="Association Support">Soutien associatif</span>
+        <span class="name">ACISSI</span>
+        <span class="desc" data-fr="Association pour la promotion de la sécurité informatique." data-en="Association for the promotion of information security.">Association pour la promotion de la sécurité informatique.</span>
+      </div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Idée du mercredi soir, validation jeudi midi" data-en="Wednesday Night Idea, Thursday Noon Approval">Idée du mercredi soir, validation jeudi midi</span>
+        <span class="name">Richard &amp; Florentine</span>
+        <span class="desc" data-fr="Ils n'étaient pas obligés. Ils l'ont fait quand même." data-en="They didn't have to. They did anyway.">Ils n'étaient pas obligés. Ils l'ont fait quand même.</span>
+      </div>
+    </div>
+
+    <!-- ══ CONGRATULATIONS II ══ -->
+    <div class="block">
+      <div class="section-title" data-fr="Encore des Succès" data-en="More Achievements">Encore des Succès</div>
+      <div class="section-rule"></div>
+
+      <div class="achievement">
+        <span class="prompt">$ </span>systemctl status clamav<br>
+        <span style="color:var(--accent)">● clamav.service — Active: active (running)</span><br>
+        <span class="comment" data-fr="# C'est VOUS qui avez fait ça. Soyez fiers." data-en="# YOU did that. Be proud."># C'est VOUS qui avez fait ça. Soyez fiers.</span>
+      </div>
+      <div class="achievement">
+        <span class="prompt">$ </span>iptables -L | grep ACCEPT<br>
+        <span style="color:var(--accent)">ACCEPT  tcp  --  anywhere  anywhere  tcp dpt:http</span><br>
+        <span class="comment" data-fr="# Le pare-feu de Jimmy est de retour, grâce à vous." data-en="# Jimmy's firewall lives again, thanks to you."># Le pare-feu de Jimmy est de retour, grâce à vous.</span>
+      </div>
+      <div class="achievement">
+        <span class="prompt">$ </span>ss -tlnp | grep 4444<br>
+        <span style="color:#6ee7b7">(nothing)</span><br>
+        <span class="comment" data-fr="# La backdoor est partie. Le héros a quitté le bâtiment." data-en="# The backdoor is gone. The hero has left the building."># La backdoor est partie. Le héros a quitté le bâtiment.</span>
+      </div>
+    </div>
+
+    <!-- ══ CATS ══ -->
+    <div class="block">
+      <div class="section-title" data-fr="Remerciements · Les Chats" data-en="Special Thanks · The Cats">Remerciements · Les Chats</div>
+      <div class="section-rule"></div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="10ème demande de croquettes · Poils sur le clavier" data-en="10th Daily Food Request · Fur on Keyboard">10ème demande de croquettes · Poils sur le clavier</span>
+        <span class="name cat">Paté le chat 🐈‍⬛</span>
+        <span class="desc" data-fr="git blame affiche 4 commits à 3h17. Tous de lui." data-en="git blame shows 4 commits at 3:17 AM. All from him.">git blame affiche 4 commits à 3h17. Tous de lui.</span>
+      </div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Spécialiste Redémarrage Forcé · Interrupt Sleep()" data-en="Force-Reboot Specialist · Sleep() Interrupt">Spécialiste Redémarrage Forcé · Interrupt Sleep()</span>
+        <span class="name cat">Archi le chat 🩶</span>
+        <span class="desc" data-fr="A traversé la multiprise. Nous a sauvés du mauvais code." data-en="Walked across the power strip. Saved us from bad code.">A traversé la multiprise. Nous a sauvés du mauvais code.</span>
+      </div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Soutien émotionnel &amp; Poids moral" data-en="Emotional Support &amp; Moral Weight">Soutien émotionnel &amp; Poids moral</span>
+        <span class="name cat">Paté 🐈‍⬛ &amp; Archi 🩶 (jointly)</span>
+        <span class="desc" data-fr="Ils ne savent pas ce qu'est un pare-feu. Ils SONT le pare-feu." data-en="They don't know what a firewall is. They are the firewall.">Ils ne savent pas ce qu'est un pare-feu. Ils SONT le pare-feu.</span>
+      </div>
+    </div>
+
+    <!-- ══ CONGRATULATIONS III ══ -->
+    <div class="block">
+      <div class="section-title" data-fr="TOI — Le Lecteur" data-en="YOU — The Reader">TOI — Le Lecteur</div>
+      <div class="section-rule"></div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Jouer avec les tutos · Casser des trucs avec style" data-en="Playing with Tutorials · Breaking Things Responsibly">Jouer avec les tutos · Casser des trucs avec style</span>
+        <span class="name you">You 🖥️</span>
+        <span class="desc" data-fr="On a fait ça pour toi. Tu es là. C'est tout ce qui compte." data-en="We made this for you. You showed up. That's everything.">On a fait ça pour toi. Tu es là. C'est tout ce qui compte.</span>
+      </div>
+
+      <div class="congrats"><span class="prefix">// </span><span data-fr="Vous avez terminé des labs que Cédric refusait de toucher." data-en="You completed labs that Cédric refused to touch.">Vous avez terminé des labs que Cédric refusait de toucher.</span></div>
+      <div class="congrats"><span class="prefix">// </span><span data-fr="Vous avez réparé ce que Jimmy a cassé, sans vous plaindre." data-en="You fixed what Jimmy broke and didn't even complain.">Vous avez réparé ce que Jimmy a cassé, sans vous plaindre.</span></div>
+      <div class="congrats"><span class="prefix">// </span><span data-fr="Vous avez déchiffré le fichier du patron et sauvé le rapport trimestriel." data-en="You decrypted the boss's file and saved the quarterly report.">Vous avez déchiffré le fichier du patron et sauvé le rapport trimestriel.</span></div>
+      <div class="congrats"><span class="prefix">// </span><span data-fr="Quelque part, un port 4444 non sécurisé est fermé grâce à vous." data-en="Somewhere, an unsecured port 4444 is closed because of you.">Quelque part, un port 4444 non sécurisé est fermé grâce à vous.</span></div>
+      <div class="congrats"><span class="prefix">>> </span><span data-fr="FÉLICITATIONS. Vous êtes maintenant aiguisé. Utilisez-le avec sagesse." data-en="CONGRATULATIONS. You are now sharp. Use it wisely.">FÉLICITATIONS. Vous êtes maintenant aiguisé. Utilisez-le avec sagesse.</span></div>
+    </div>
+
+    <!-- ══ MORE NOBODY ══ -->
+    <div class="block">
+      <div class="section-title" data-fr="Non Crédité" data-en="Uncredited">Non Crédité</div>
+      <div class="section-rule"></div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Conception sonore" data-en="Sound Design">Conception sonore</span>
+        <span class="name nobody">Nobody</span>
+        <span class="desc" data-fr="Le bruit du ventilateur était involontaire mais atmosphérique." data-en="The fan noise was unintentional but atmospheric.">Le bruit du ventilateur était involontaire mais atmosphérique.</span>
+      </div>
+      <div class="credit-line">
+        <span class="role" data-fr="Vider le Frigo" data-en="Emptying the Fridge">Vider le Frigo</span>
+        <span class="name nobody">Nobody</span>
+        <span class="desc" data-fr="Enquête en cours." data-en="Investigation ongoing.">Enquête en cours.</span>
+      </div>
+      <div class="credit-line">
+        <span class="role" data-fr="Réponses Stack Overflow" data-en="Stack Overflow Answers">Réponses Stack Overflow</span>
+        <span class="name nobody">Some Guy in 2009</span>
+        <span class="desc" data-fr="Marqué en doublon. Nous a quand même sauvés trois fois." data-en="Marked as duplicate. Still saved us three times.">Marqué en doublon. Nous a quand même sauvés trois fois.</span>
+      </div>
+      <div class="credit-line">
+        <span class="role" data-fr="Cette man page que personne ne lit" data-en="That One Man Page Nobody Reads">Cette man page que personne ne lit</span>
+        <span class="name nobody">man iptables</span>
+        <span class="desc" data-fr="600 lignes. On en a lu 12. C'était les bonnes." data-en="600 lines. We read 12. Those were the right 12.">600 lignes. On en a lu 12. C'était les bonnes.</span>
+      </div>
+      <div class="credit-line">
+        <span class="role" data-fr="Discours de motivation" data-en="Motivational Speech">Discours de motivation</span>
+        <span class="name nobody">Nobody</span>
+        <span class="desc" data-fr="On s'est parlé à nous-mêmes. Ça a marché." data-en="We talked to ourselves. It worked.">On s'est parlé à nous-mêmes. Ça a marché.</span>
+      </div>
+    </div>
+
+    <!-- ══ OPEN SOURCE & BOOKS ══ -->
+    <div class="block">
+      <div class="section-title" data-fr="Sur les épaules des géants" data-en="Standing on Giants">Sur les épaules des géants</div>
+      <div class="section-rule"></div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Outils Open Source" data-en="Open Source Tools">Outils Open Source</span>
+        <div class="compact-credits">ClamAV — Cisco Talos * Suricata — OISF * Sysmon — Sysinternals / Microsoft * OpenSSL Project * GnuPG Project * Netcat * iptables — Netfilter Core Team * Sigma — SigmaHQ * YARA * Elasticsearch — Elastic * Splunk * Nmap — Gordon Lyon</div>
+      </div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Frameworks &amp; Références" data-en="Frameworks &amp; References">Frameworks &amp; Références</span>
+        <div class="compact-credits">MITRE ATT&amp;CK * Cyber Kill Chain — Lockheed Martin * EBIOS Risk Manager — ANSSI * NIST RMF * PTES — Penetration Testing Execution Standard * Zero Trust Architecture — NIST SP 800-207 * OWASP Foundation * CVE / NVD</div>
+      </div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Docs institutionnels — ANSSI &amp; NIST" data-en="Institutional Docs — ANSSI &amp; NIST">Docs institutionnels — ANSSI &amp; NIST</span>
+        <div class="compact-credits">Healthy IS — 42 Measures * GNU/Linux Configuration Recommendations * Mobile Digital Hygiene * Secure Administration of IT Systems * Intro to Information Security * Computer Security Log Management * General Server Security * Windows Security Baselines * App Control for Business * ICS Cybersecurity * Virtualization Security * Relational Databases Security * Sensitive IS in the Cloud * Securing Public Web Servers * Incident Response Recommendations * Forensics in Incident Response * Malware Incident Prevention * Cyber Threat Information Sharing * AD Tier 0 Remediation * Firewall Guidelines * IDPS Guide * OpenSSH Secure Use * IPsec Recommendations * BGP Best Practices * TLS Security Recommendations * DDoS * Ransomware Prevention * Backup Golden Rules * IS Mapping</div>
+      </div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Livres" data-en="Books">Livres</span>
+        <div class="compact-credits">Blue Team Handbook: SOC, SIEM &amp; Threat Hunting * Virtual Honeypots * Practical Packet Analysis * Network Security Assessment * Attacking Network Protocols * The Art of Memory Forensics * Practical Malware Analysis * Metasploit: The Penetration Tester's Guide * Hacking 2nd Ed. * Nmap Network Scanning * Rootkits: Subverting the Windows Kernel * Windows Internals Part 1 &amp; 2 * Evading EDR * RTFM: Red Team Field Manual * Introducing Regular Expressions * Mastering Regular Expressions</div>
+      </div>
+
+      <div class="credit-line">
+        <span class="role" data-fr="Plateformes de formation &amp; Communautés" data-en="Training Platforms &amp; Communities">Plateformes de formation &amp; Communautés</span>
+        <div class="compact-credits">TryHackMe * HackTheBox * OverTheWire * Boss of the SOC v1 — Splunk * PortSwigger Web Security Academy * PicoCTF * OWASP WebGoat * SANS Cyber Aces * IppSec (YouTube) * LiveOverflow (YouTube) * catb.org — Eric S. Raymond</div>
+      </div>
+    </div>
+
+    <!-- ══ FINAL ══ -->
+    <div class="block">
+      <div class="section-title">fin.</div>
+      <div class="section-rule"></div>
+
+      <div class="achievement" style="text-align:center;font-size:.85rem;padding:1.2rem 1.5rem;">
+        <span class="comment" data-fr="# Aucun système n'a été maltraité lors de la création de ces labs." data-en="# No systems were harmed in the making of these labs."># Aucun système n'a été maltraité lors de la création de ces labs.</span><br>
+        <span class="comment" data-fr="# (Le mot de passe de Cédric a été changé pour son bien.)" data-en="# (Cédric's password was changed for his own good.)"># (Le mot de passe de Cédric a été changé pour son bien.)</span><br>
+        <span class="comment" data-fr="# (Le pare-feu de Jimmy est sous surveillance.)" data-en="# (Jimmy's firewall is under monitoring.)"># (Le pare-feu de Jimmy est sous surveillance.)</span><br>
+        <span class="comment" data-fr="# (Les chats n'ont aucun regret.)" data-en="# (The cats have no regrets.)"># (Les chats n'ont aucun regret.)</span>
+      </div>
+
+      <div class="spacer-sm"></div>
+      <div style="font-family:var(--mono);font-size:.72rem;color:var(--text-dim);letter-spacing:.12em;text-align:center;line-height:2">
+        <span data-fr="Fait avec ☕ et de la panique occasionnelle" data-en="Made with ☕ and occasional panic">Fait avec ☕ et de la panique occasionnelle</span><br>
+        <span style="color:var(--accent)" data-fr="Aucun privilège root n'a été définitivement abusé." data-en="No root privileges were permanently abused.">Aucun privilège root n'a été définitivement abusé.</span>
+      </div>
+    </div>
+
+    <div style="height:100vh"></div>
+  </div><!-- /reel -->
+</div><!-- /stage -->
+
+<!-- ── fin overlay ── -->
+<div id="fin">
+  <div class="fin-title" data-fr="MERCI D'AVOIR HACKÉ AVEC NOUS" data-en="THANKS FOR HACKING WITH US">MERCI D'AVOIR HACKÉ AVEC NOUS</div>
+  <p data-fr="// fin de transmission" data-en="// end of transmission">// fin de transmission</p>
+  <p style="margin-top:1rem;font-size:.7rem">
+    <a href="index.html" style="color:var(--accent);font-family:var(--mono);letter-spacing:.1em;text-decoration:none">
+      <span data-fr="← retour aux labs" data-en="← back to labs">← retour aux labs</span>
+    </a>
+  </p>
+</div>
+
+<!-- ── controls ── -->
+<div id="controls">
+  <button id="btn-pause" onclick="togglePause()">⏸ PAUSE</button>
+  <button onclick="replayCredits()">↺ REPLAY</button>
+  <button onclick="window.location.href='index.html'">← LABS</button>
+</div>
+
+<script>
+  (function(){ setLang(localStorage.getItem('lang')||'fr'); })();
+  function setLang(l){
+    localStorage.setItem('lang',l);
+    document.documentElement.lang=l;
+    document.querySelectorAll('[data-fr][data-en]').forEach(function(e){e.textContent=e.dataset[l];});
+    var f=document.getElementById('btn-fr'),n=document.getElementById('btn-en');
+    if(f&&n){f.classList.toggle('on',l==='fr');n.classList.toggle('on',l==='en');}
+  }
+
+  // Calculate scroll distance: reel must travel from top:100% to fully above stage
+  function initReel() {
+    var reel = document.getElementById('reel');
+    var stage = document.getElementById('stage');
+    var stageH = stage.offsetHeight;
+    var reelH = reel.scrollHeight;
+    // move reel up by: stageH (its starting offset) + reelH (its own height)
+    var dist = stageH + reelH;
+    reel.style.setProperty('--roll-to', '-' + dist + 'px');
+  }
+  initReel();
+
+  var paused = false;
+  function togglePause(){
+    paused = !paused;
+    document.getElementById('reel').classList.toggle('paused', paused);
+    document.getElementById('btn-pause').textContent = paused ? '▶ PLAY' : '⏸ PAUSE';
+  }
+
+  function replayCredits(){
+    var reel = document.getElementById('reel');
+    document.getElementById('fin').style.display = 'none';
+    reel.style.animation = 'none';
+    reel.offsetHeight; // reflow
+    initReel();
+    reel.style.animation = 'roll 135s linear forwards';
+    paused = false;
+    document.getElementById('btn-pause').textContent = '⏸ PAUSE';
+    reel.classList.remove('paused');
+  }
+
+  // show fin overlay when animation ends
+  document.getElementById('reel').addEventListener('animationend', function(){
+    document.getElementById('fin').style.display = 'flex';
+  });
+</script>
+</body>
+</html>

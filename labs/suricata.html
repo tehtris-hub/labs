@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEHTRI-S-Hub Labs — Suricata</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0c0f;--bg2:#111418;--bg3:#181c22;--border:#1e2530;--accent:#00e5a0;--accent2:#0af;--accent3:#f05a28;--text:#c8d0dc;--text-dim:#5a6580;--text-hi:#eef2f8;--mono:'Share Tech Mono',monospace;--sans:'Barlow',sans-serif;--cond:'Barlow Condensed',sans-serif;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.65;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 4px);pointer-events:none;z-index:9999;}
+  header{position:sticky;top:0;z-index:100;background:rgba(10,12,15,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;gap:2rem;height:56px;}
+  .logo{font-family:var(--cond);font-weight:900;font-size:1.3rem;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;text-decoration:none;flex-shrink:0;}
+  .logo span{color:var(--text-dim);font-weight:300;}
+  nav{display:flex;gap:0;margin-left:auto;align-items:center;}
+  nav a{font-family:var(--mono);font-size:.75rem;color:var(--text-dim);text-decoration:none;padding:0 1rem;height:56px;display:flex;align-items:center;border-left:1px solid var(--border);transition:color .2s,background .2s;letter-spacing:.05em;}
+  nav a:hover{color:var(--accent);background:rgba(0,229,160,.04);}
+  nav a.active{color:var(--accent);border-bottom:2px solid var(--accent);}
+  .lab-hero{padding:4rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+  .breadcrumb{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);letter-spacing:.1em;margin-bottom:1.5rem;}
+  .breadcrumb a{color:var(--text-dim);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--accent);}
+  .lab-meta-row{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+  .lab-cat{font-family:var(--mono);font-size:.65rem;color:#0af;letter-spacing:.15em;text-transform:uppercase;}
+  .lab-difficulty{font-family:var(--mono);font-size:.6rem;padding:2px 8px;border-radius:2px;border:1px solid #f7c948;color:#f7c948;background:rgba(247,201,72,.07);letter-spacing:.08em;}
+  .lab-hero h1{font-family:var(--cond);font-weight:900;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;color:var(--text-hi);letter-spacing:-.01em;margin-bottom:1rem;}
+  .lab-hero h1 em{font-style:normal;color:#0af;}
+  .lab-hero p{max-width:560px;color:var(--text-dim);font-size:.95rem;line-height:1.7;}
+  main{max-width:860px;margin:0 auto;padding:0 2rem 6rem;}
+  .step{margin-bottom:3rem;}
+  .step-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border);}
+  .step-num{font-family:var(--mono);font-size:.65rem;color:#0af;letter-spacing:.15em;text-transform:uppercase;flex-shrink:0;}
+  .step-header h2{font-family:var(--cond);font-weight:700;font-size:1.2rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-hi);}
+  .step p{color:var(--text-dim);font-size:.9rem;line-height:1.65;margin-bottom:.75rem;}
+  .step ul,.step ol{padding-left:1.4rem;color:var(--text-dim);font-size:.9rem;line-height:1.7;margin-bottom:.75rem;}
+  .step li{margin-bottom:.25rem;}
+  .vm-state{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent3);border-radius:4px;padding:1rem 1.2rem;margin-bottom:1.25rem;}
+  .vm-state .vs-label{font-family:var(--mono);font-size:.65rem;color:var(--accent3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.4rem;}
+  .vm-state p{font-size:.88rem;color:var(--text);margin:0;}
+  pre{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1rem 1.2rem;overflow-x:auto;margin-bottom:1rem;}
+  pre code{font-family:var(--mono);font-size:.8rem;color:var(--text);line-height:1.7;}
+  .code-label{font-family:var(--mono);font-size:.6rem;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem;}
+  .todo-line{color:#f7c948;}
+  .comment-line{color:var(--text-dim);}
+  .cmd-line{color:var(--accent);}
+  .yaml-key{color:#0af;}
+  .yaml-val{color:#a06cf0;}
+  code:not(pre code){font-family:var(--mono);font-size:.82em;color:var(--accent2);background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:1px 5px;}
+  .info-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent2);border-radius:4px;padding:.9rem 1.2rem;margin-bottom:1rem;font-size:.88rem;color:var(--text-dim);}
+  .info-box strong{color:var(--text-hi);font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;display:block;margin-bottom:.3rem;}
+  details.solution>summary{cursor:pointer;font-family:var(--mono);font-size:.75rem;color:var(--accent3);letter-spacing:.1em;list-style:none;display:flex;align-items:center;gap:.5rem;padding:.5rem 0;user-select:none;transition:color .2s;}
+  details.solution>summary:hover{color:#ff8060;}
+  details.solution>summary::before{content:'▶';font-size:.6rem;transition:transform .2s;}
+  details[open].solution>summary::before{transform:rotate(90deg);}
+  details.solution .solution-body{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent3);border-radius:4px;padding:1rem 1.2rem;margin-top:.5rem;}
+  details.solution .solution-body p{color:var(--text-dim);font-size:.88rem;margin-bottom:.6rem;}
+  .success-box{background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.25);border-radius:4px;padding:1rem 1.2rem;font-size:.88rem;color:var(--text);}
+  .success-box strong{color:var(--accent);font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;display:block;margin-bottom:.4rem;}
+  footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;font-family:var(--mono);font-size:.7rem;color:var(--text-dim);letter-spacing:.08em;}
+.i18n-toggle{display:flex;align-items:center;gap:0;margin-left:1.5rem;border:1px solid var(--accent);border-radius:3px;overflow:hidden;flex-shrink:0;}
+  .i18n-toggle button{background:var(--bg2);border:none;cursor:pointer;font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.12em;color:var(--text-dim);padding:5px 12px;line-height:1;transition:background .15s,color .15s;}
+  .i18n-toggle button.on{background:var(--accent);color:#0a0c0f;}
+  .i18n-toggle button:not(.on):hover{background:var(--bg3);color:var(--accent);}
+  .i18n-toggle .i18n-sep{width:1px;background:var(--accent);align-self:stretch;flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="../index.html">TEHTRI-S-Hub <span>/ Labs</span></a>
+  <nav>
+    <a href="../index.html" data-fr="Accueil" data-en="Home">Accueil</a>
+    <a href="../index.html#labs" class="active" data-fr="Labs" data-en="Labs">Labs</a>
+    <a href="../resources.html" data-fr="Ressources" data-en="Resources">Ressources</a>
+    <a href="../resources.html#books" data-fr="Livres" data-en="Books">Livres</a>
+    <a href="../credits.html" data-fr="Crédits" data-en="Credits">Crédits</a>
+  </nav>
+<div class="i18n-toggle"><button id="btn-fr" class="on" onclick="setLang('fr')">FR</button><div class="i18n-sep"></div><button id="btn-en" onclick="setLang('en')">EN</button></div>
+  </header>
+
+<section class="lab-hero">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a> &nbsp;/&nbsp; <a href="../index.html#labs">Labs</a> &nbsp;/&nbsp; Suricata
+  </div>
+  <div class="lab-meta-row">
+    <span class="lab-cat">Lab · IDS · Network</span>
+    <span class="lab-difficulty" data-fr="Intermédiaire" data-en="Intermediate">Intermédiaire</span>
+  </div>
+  <h1><em>Suricata</em> —<br><span data-fr="IDS Réseau &amp; Règles" data-en="Network IDS &amp; Rules">IDS Réseau &amp; Règles</span></h1>
+  <p data-fr="Suricata est installé sur la VM mais ne génère aucune alerte. L'interface réseau n'est pas configurée et les règles Emerging Threats sont désactivées. Votre mission : corriger la configuration YAML et activer les règles communautaires." data-en="Suricata is installed on the VM but generates no alerts. The network interface is not configured and Emerging Threats rules are disabled. Your mission: fix the YAML config and enable community rules.">Suricata est installé sur la VM mais ne génère aucune alerte. L'interface réseau n'est pas configurée et les règles Emerging Threats sont désactivées. Votre mission : corriger la configuration YAML et activer les règles communautaires.</p>
+</section>
+
+<main>
+
+  <!-- STEP 1 -->
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">01 //</span>
+      <h2 data-fr="Objectif" data-en="Objective">Objectif</h2>
+    </div>
+    <p data-fr="Suricata est un IDS/IPS (Intrusion Detection/Prevention System) réseau open-source. Il inspecte le trafic en temps réel et génère des alertes basées sur des règles (fichiers .rules)." data-en="Suricata is an open-source network IDS/IPS (Intrusion Detection/Prevention System). It inspects traffic in real time and generates alerts based on rules (.rules files).">Suricata est un IDS/IPS réseau open-source. Il inspecte le trafic en temps réel et génère des alertes basées sur des règles (fichiers <code>.rules</code>).</p>
+    <p data-fr="À la fin de ce lab vous saurez :" data-en="By the end of this lab you will know how to:">À la fin de ce lab vous saurez :</p>
+    <ul>
+      <li data-fr="Identifier l'interface réseau de votre VM" data-en="Identify the network interface of your VM">Identifier l'interface réseau de votre VM</li>
+      <li data-fr="Configurer suricata.yaml correctement" data-en="Configure suricata.yaml correctly">Configurer <code>suricata.yaml</code> correctement</li>
+      <li data-fr="Télécharger les règles Emerging Threats avec suricata-update" data-en="Download Emerging Threats rules with suricata-update">Télécharger les règles Emerging Threats avec <code>suricata-update</code></li>
+      <li data-fr="Tester Suricata en mode IDS et lire les alertes" data-en="Test Suricata in IDS mode and read alerts">Tester Suricata en mode IDS et lire les alertes</li>
+    </ul>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">02 //</span>
+      <h2 data-fr="État de la VM — Ce qui ne fonctionne pas" data-en="VM State — What Is Broken">État de la VM — Ce qui ne fonctionne pas</h2>
+    </div>
+
+    <div class="vm-state">
+      <div class="vs-label" data-fr="Problèmes détectés" data-en="Detected issues">Problèmes détectés</div>
+      <p data-fr="(1) Dans /etc/suricata/suricata.yaml, l'interface réseau est réglée sur 'eth99' qui n'existe pas. (2) La section rule-files ne pointe vers aucun fichier. (3) suricata-update n'a jamais été exécuté — aucune règle n'est présente." data-en="(1) In /etc/suricata/suricata.yaml, the network interface is set to 'eth99' which doesn't exist. (2) The rule-files section points to no file. (3) suricata-update was never run — no rules are present.">(1) Dans <code>/etc/suricata/suricata.yaml</code>, l'interface réseau est réglée sur <code>eth99</code> qui n'existe pas. (2) La section <code>rule-files</code> ne pointe vers aucun fichier. (3) <code>suricata-update</code> n'a jamais été exécuté — aucune règle n'est présente.</p>
+    </div>
+
+    <p data-fr="Diagnostiquez d'abord :" data-en="Diagnose first:">Diagnostiquez d'abord :</p>
+    <div class="code-label" data-fr="Diagnostic initial" data-en="Initial diagnostics">Diagnostic initial</div>
+    <pre><code><span class="comment-line"># Trouver l'interface réseau active de la VM</span>
+<span class="cmd-line">ip link show</span>
+<span class="cmd-line">ip addr</span>
+
+<span class="comment-line"># Voir l'interface configurée dans suricata.yaml (ligne af-packet)</span>
+<span class="cmd-line">grep -n "interface" /etc/suricata/suricata.yaml | head -5</span>
+
+<span class="comment-line"># Vérifier les règles présentes</span>
+<span class="cmd-line">ls /var/lib/suricata/rules/</span>
+
+<span class="comment-line"># Tenter de démarrer et observer l'erreur</span>
+<span class="cmd-line">sudo suricata -T -c /etc/suricata/suricata.yaml</span></code></pre>
+
+    <div class="info-box">
+      <strong data-fr="À NOTER" data-en="NOTE">À NOTER</strong>
+      <span data-fr="La commande 'suricata -T' teste la configuration sans démarrer le moteur. C'est votre meilleur outil de diagnostic : elle affiche exactement ce qui est mal configuré." data-en="The 'suricata -T' command tests the configuration without starting the engine. It's your best diagnostic tool: it shows exactly what is misconfigured.">La commande <code>suricata -T</code> teste la configuration sans démarrer le moteur. C'est votre meilleur outil de diagnostic : elle affiche exactement ce qui est mal configuré.</span>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">03 //</span>
+      <h2 data-fr="Script Guidé — À Compléter" data-en="Guided Script — To Complete">Script Guidé — À Compléter</h2>
+    </div>
+    <p data-fr="Complétez les TODO dans ce script. Exécutez-le après avoir identifié votre interface réseau à l'étape 02." data-en="Complete the TODOs in this script. Run it after identifying your network interface in step 02.">Complétez les <code>TODO</code> dans ce script. Exécutez-le après avoir identifié votre interface réseau à l'étape 02.</p>
+
+    <div class="code-label">setup_suricata.sh</div>
+    <pre><code><span class="comment-line">#!/bin/bash
+# Lab TEHTRI-S-Hub — Suricata IDS setup
+# Remplacez VOTRE_INTERFACE par le nom réel (ex: eth0, ens33, enp0s3)</span>
+
+<span class="todo-line">IFACE="???"   # TODO: remplacer par votre interface (résultat de 'ip link show')</span>
+
+<span class="comment-line"># --- Étape 1 : Corriger l'interface dans suricata.yaml ---</span>
+<span class="comment-line"># Le fichier contient : interface: eth99</span>
+<span class="todo-line"># TODO: remplacer eth99 par $IFACE dans /etc/suricata/suricata.yaml
+# Indice : sudo sed -i "s/interface: eth99/interface: $IFACE/" ???</span>
+
+<span class="comment-line"># --- Étape 2 : Installer suricata-update si absent ---</span>
+<span class="cmd-line">sudo apt-get install -y suricata python3-pip 2>/dev/null</span>
+<span class="cmd-line">sudo pip3 install suricata-update 2>/dev/null || true</span>
+
+<span class="comment-line"># --- Étape 3 : Télécharger les règles Emerging Threats ---</span>
+<span class="todo-line"># TODO: lancer suricata-update pour télécharger les règles
+# Indice : sudo suricata-update</span>
+
+<span class="comment-line"># --- Étape 4 : Activer les règles dans suricata.yaml ---</span>
+<span class="comment-line"># Vérifier que rule-files pointe bien vers /var/lib/suricata/rules/suricata.rules</span>
+<span class="cmd-line">grep -A5 "rule-files:" /etc/suricata/suricata.yaml</span>
+<span class="todo-line"># TODO: si la liste est vide, ajouter la règle :
+# Indice : echo " - /var/lib/suricata/rules/suricata.rules" | sudo tee -a /etc/suricata/suricata.yaml</span>
+
+<span class="comment-line"># --- Étape 5 : Valider la configuration ---</span>
+<span class="cmd-line">sudo suricata -T -c /etc/suricata/suricata.yaml -v</span>
+
+echo "Configuration OK. Lancez : sudo suricata -c /etc/suricata/suricata.yaml -i $IFACE"</code></pre>
+
+    <details class="solution">
+      <summary data-fr="▸ AFFICHER LA SOLUTION (essayez d'abord !)" data-en="▸ SHOW SOLUTION (try first!)">▸ AFFICHER LA SOLUTION (essayez d'abord !)</summary>
+      <div class="solution-body">
+        <p data-fr="Solution (adaptez IFACE à votre environnement) :" data-en="Solution (adapt IFACE to your environment):">Solution (adaptez <code>IFACE</code> à votre environnement) :</p>
+        <pre><code><span class="cmd-line">IFACE="eth0"   # ou ens33, enp0s3, selon votre VM</span>
+
+<span class="cmd-line">sudo sed -i "s/interface: eth99/interface: $IFACE/" /etc/suricata/suricata.yaml</span>
+
+<span class="cmd-line">sudo suricata-update</span>
+
+<span class="comment-line"># Si rule-files est vide dans le yaml :</span>
+<span class="cmd-line">echo "  - /var/lib/suricata/rules/suricata.rules" | sudo tee -a /etc/suricata/suricata.yaml</span>
+
+<span class="cmd-line">sudo suricata -T -c /etc/suricata/suricata.yaml -v</span></code></pre>
+      </div>
+    </details>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">04 //</span>
+      <h2 data-fr="Vérification — Générer une Alerte de Test" data-en="Verification — Generate a Test Alert">Vérification — Générer une Alerte de Test</h2>
+    </div>
+    <p data-fr="Lancez Suricata en mode IDS sur votre interface et déclenchez une alerte connue :" data-en="Run Suricata in IDS mode on your interface and trigger a known alert:">Lancez Suricata en mode IDS sur votre interface et déclenchez une alerte connue :</p>
+    <div class="code-label" data-fr="Vérification" data-en="Verification">Vérification</div>
+    <pre><code><span class="comment-line"># Démarrer Suricata en mode IDS (remplacer eth0 par votre interface)</span>
+<span class="cmd-line">sudo suricata -c /etc/suricata/suricata.yaml -i eth0 -D</span>
+
+<span class="comment-line"># Générer du trafic de test (scan nmap local)</span>
+<span class="cmd-line">nmap -sS 127.0.0.1</span>
+
+<span class="comment-line"># Lire les alertes en temps réel</span>
+<span class="cmd-line">sudo tail -f /var/log/suricata/fast.log</span>
+
+<span class="comment-line"># Ou lire les logs JSON structurés (plus complets)</span>
+<span class="cmd-line">sudo tail -f /var/log/suricata/eve.json | python3 -m json.tool | grep -A5 '"event_type":"alert"'</span></code></pre>
+
+    <div class="success-box">
+      <strong data-fr="SUCCÈS ATTENDU" data-en="EXPECTED SUCCESS">SUCCÈS ATTENDU</strong>
+      <span data-fr="Le fichier fast.log doit contenir des lignes d'alerte avec un timestamp, la priorité, et la signature déclenchée. Si fast.log se remplit, Suricata inspecte bien le trafic." data-en="The fast.log file should contain alert lines with a timestamp, priority, and triggered signature. If fast.log is filling up, Suricata is correctly inspecting traffic.">Le fichier <code>fast.log</code> doit contenir des lignes d'alerte avec un timestamp, la priorité, et la signature déclenchée. Si <code>fast.log</code> se remplit, Suricata inspecte bien le trafic.</span>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">05 //</span>
+      <h2 data-fr="Pour aller plus loin" data-en="Going Further">Pour aller plus loin</h2>
+    </div>
+    <ul>
+      <li data-fr="Écrire une règle Suricata personnalisée (fichier local.rules)" data-en="Write a custom Suricata rule (local.rules file)">Écrire une règle Suricata personnalisée (<code>local.rules</code>)</li>
+      <li data-fr="Configurer Suricata en mode IPS (inline) avec NFQUEUE" data-en="Configure Suricata in IPS mode (inline) with NFQUEUE">Configurer Suricata en mode IPS (inline) avec NFQUEUE</li>
+      <li data-fr="Envoyer les logs eve.json vers Elasticsearch ou Splunk" data-en="Send eve.json logs to Elasticsearch or Splunk">Envoyer les logs <code>eve.json</code> vers Elasticsearch ou Splunk</li>
+      <li><a href="https://docs.suricata.io" target="_blank" rel="noopener" style="color:var(--accent2);">docs.suricata.io</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+  TEHTRI-S-Hub Labs &nbsp;·&nbsp; Lab Suricata &nbsp;·&nbsp; <span data-fr="IDS Réseau" data-en="Network IDS">IDS Réseau</span>
+</footer>
+
+
+<script>
+  (function(){setLang(localStorage.getItem('lang')||'fr');})();
+  function setLang(l){
+    localStorage.setItem('lang',l);
+    document.documentElement.lang=l;
+    document.querySelectorAll('[data-fr][data-en]').forEach(function(e){e.textContent=e.dataset[l];});
+    var f=document.getElementById('btn-fr'),n=document.getElementById('btn-en');
+    if(f&&n){f.classList.toggle('on',l==='fr');n.classList.toggle('on',l==='en');}
+  }
+</script>
+</body>
+</html>

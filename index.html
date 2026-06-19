@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEHTRI-S-Hub Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0a0c0f;
+    --bg2:      #111418;
+    --bg3:      #181c22;
+    --border:   #1e2530;
+    --accent:   #00e5a0;
+    --accent2:  #0af;
+    --accent3:  #f05a28;
+    --text:     #c8d0dc;
+    --text-dim: #5a6580;
+    --text-hi:  #eef2f8;
+    --mono:     'Share Tech Mono', monospace;
+    --sans:     'Barlow', sans-serif;
+    --cond:     'Barlow Condensed', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.15) 2px, rgba(0,0,0,.15) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,12,15,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; gap: 2rem;
+    height: 56px;
+  }
+  .logo {
+    font-family: var(--cond);
+    font-weight: 900;
+    font-size: 1.3rem;
+    letter-spacing: .1em;
+    color: var(--accent);
+    text-transform: uppercase;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .logo span { color: var(--text-dim); font-weight: 300; }
+  nav { display: flex; gap: 0; margin-left: auto; align-items: center; }
+  nav a {
+    font-family: var(--mono);
+    font-size: .75rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0 1rem;
+    height: 56px;
+    display: flex; align-items: center;
+    border-left: 1px solid var(--border);
+    transition: color .2s, background .2s;
+    letter-spacing: .05em;
+  }
+  nav a:hover { color: var(--accent); background: rgba(0,229,160,.04); }
+  nav a.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 6rem 2rem 4rem;
+    max-width: 1100px; margin: 0 auto;
+    position: relative;
+  }
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: .7rem;
+    color: var(--accent);
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: .75rem;
+  }
+  .hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 1px;
+    background: var(--accent);
+  }
+  .hero h1 {
+    font-family: var(--cond);
+    font-weight: 900;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    line-height: 1;
+    color: var(--text-hi);
+    letter-spacing: -.01em;
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p {
+    max-width: 580px;
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-family: var(--mono);
+    font-size: .8rem;
+    color: var(--bg);
+    background: var(--accent);
+    text-decoration: none;
+    padding: .6rem 1.4rem;
+    border-radius: 3px;
+    letter-spacing: .08em;
+    font-weight: 700;
+    transition: opacity .2s, transform .15s;
+  }
+  .hero-cta:hover { opacity: .85; transform: translateY(-1px); }
+  .hero-cta-ghost {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-family: var(--mono);
+    font-size: .8rem;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    text-decoration: none;
+    padding: .6rem 1.4rem;
+    border-radius: 3px;
+    letter-spacing: .08em;
+    margin-left: 1rem;
+    transition: background .2s;
+  }
+  .hero-cta-ghost:hover { background: rgba(0,229,160,.06); }
+
+  /* ── MAIN ── */
+  main { max-width: 1100px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex; align-items: baseline; gap: 1rem;
+    margin: 4rem 0 1.5rem;
+    padding-bottom: .75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header h2 {
+    font-family: var(--cond);
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-hi);
+  }
+  .section-header .count {
+    font-family: var(--mono);
+    font-size: .7rem;
+    color: var(--text-dim);
+    letter-spacing: .1em;
+  }
+  .section-desc {
+    color: var(--text-dim);
+    font-size: .9rem;
+    margin-bottom: 2rem;
+    max-width: 680px;
+    line-height: 1.6;
+  }
+
+  /* ── PHILOSOPHY BLOCKS ── */
+  .philosophy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .philosophy-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.25rem 1.25rem 1rem;
+  }
+  .philosophy-card .phi-icon {
+    font-family: var(--mono);
+    font-size: 1.4rem;
+    color: var(--accent);
+    margin-bottom: .6rem;
+  }
+  .philosophy-card h3 {
+    font-family: var(--cond);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--text-hi);
+    margin-bottom: .4rem;
+  }
+  .philosophy-card p {
+    font-size: .85rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+
+  /* ── LAB CARDS ── */
+  .lab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1rem;
+  }
+  .lab-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.25rem 1.25rem 1rem;
+    text-decoration: none;
+    display: flex; flex-direction: column; gap: .5rem;
+    position: relative; overflow: hidden;
+    transition: border-color .2s, background .2s, transform .15s;
+  }
+  .lab-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--card-accent, var(--accent));
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform .2s;
+  }
+  .lab-card:hover { border-color: var(--card-accent, var(--accent)); background: var(--bg3); transform: translateY(-1px); }
+  .lab-card:hover::before { transform: scaleY(1); }
+  .lab-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: .5rem;
+  }
+  .lab-label {
+    font-family: var(--mono);
+    font-size: .65rem;
+    color: var(--card-accent, var(--accent));
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .lab-badge {
+    font-family: var(--mono);
+    font-size: .6rem;
+    padding: 2px 8px;
+    border-radius: 2px;
+    border: 1px solid;
+    letter-spacing: .08em;
+  }
+  .badge-beginner { color: #00e5a0; border-color: #00e5a0; background: rgba(0,229,160,.07); }
+  .badge-intermediate { color: #f7c948; border-color: #f7c948; background: rgba(247,201,72,.07); }
+  .lab-title {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-hi);
+    line-height: 1.3;
+  }
+  .lab-desc {
+    font-size: .82rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .lab-tags {
+    display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .25rem;
+  }
+  .lab-tag {
+    font-family: var(--mono);
+    font-size: .6rem;
+    color: var(--text-dim);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 1px 6px;
+    letter-spacing: .06em;
+  }
+
+  .cat-av    { --card-accent: #00e5a0; }
+  .cat-ids   { --card-accent: #0af; }
+  .cat-siem  { --card-accent: #f7c948; }
+  .cat-log   { --card-accent: #7b8cde; }
+  .cat-anssi { --card-accent: #00e5a0; }
+  .cat-mitre { --card-accent: #f05a28; }
+  .cat-nist  { --card-accent: #0af; }
+  .cat-tools { --card-accent: #f7c948; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: .7rem;
+    color: var(--text-dim);
+    letter-spacing: .08em;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeUp .45s ease both; }
+  .fade-in:nth-child(2) { animation-delay: .06s; }
+  .fade-in:nth-child(3) { animation-delay: .12s; }
+  .fade-in:nth-child(4) { animation-delay: .18s; }
+  .fade-in:nth-child(5) { animation-delay: .24s; }
+  .fade-in:nth-child(6) { animation-delay: .30s; }
+.i18n-toggle{display:flex;align-items:center;gap:0;margin-left:1.5rem;border:1px solid var(--accent);border-radius:3px;overflow:hidden;flex-shrink:0;}
+  .i18n-toggle button{background:var(--bg2);border:none;cursor:pointer;font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.12em;color:var(--text-dim);padding:5px 12px;line-height:1;transition:background .15s,color .15s;}
+  .i18n-toggle button.on{background:var(--accent);color:#0a0c0f;}
+  .i18n-toggle button:not(.on):hover{background:var(--bg3);color:var(--accent);}
+  .i18n-toggle .i18n-sep{width:1px;background:var(--accent);align-self:stretch;flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="index.html">TEHTRI-S-Hub <span>/ Labs</span></a>
+  <nav>
+    <a href="index.html" class="active" data-fr="Accueil" data-en="Home">Accueil</a>
+    <a href="index.html#labs" data-fr="Labs" data-en="Labs">Labs</a>
+    <a href="resources.html" data-fr="Ressources" data-en="Resources">Ressources</a>
+    <a href="resources.html#books" data-fr="Livres" data-en="Books">Livres</a>
+      <a href="credits.html" data-fr="Crédits" data-en="Credits">Crédits</a>
+  </nav>
+<div class="i18n-toggle"><button id="btn-fr" class="on" onclick="setLang('fr')">FR</button><div class="i18n-sep"></div><button id="btn-en" onclick="setLang('en')">EN</button></div>
+  </header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag" data-fr="Plateforme de formation cybersécurité" data-en="Cybersecurity Training Platform">Plateforme de formation cybersécurité</div>
+  <h1><span data-fr="Apprendre par" data-en="Learn by">Apprendre par</span><br><em data-fr="la Pratique" data-en="Doing">la Pratique</em></h1>
+  <p data-fr="Des labs guidés, une VM préconfigurée, des scripts à compléter. Pas de théorie sans application — chaque concept s'apprend les mains dans le code." data-en="Guided labs, a pre-configured VM, scripts to complete. No theory without practice — every concept is learned hands-on.">Des labs guidés, une VM préconfigurée, des scripts à compléter. Pas de théorie sans application — chaque concept s'apprend les mains dans le code.</p>
+  <a href="index.html#labs" class="hero-cta" data-fr="→ Commencer un lab" data-en="→ Start a lab">→ Commencer un lab</a>
+  <a href="resources.html" class="hero-cta-ghost" data-fr="Références &amp; Docs" data-en="References &amp; Docs">Références &amp; Docs</a>
+</section>
+
+<main>
+
+  <!-- PHILOSOPHIE -->
+  <div class="section-header">
+    <h2 data-fr="Philosophie" data-en="Philosophy">Philosophie</h2>
+    <span class="count">// learn · break · fix · understand</span>
+  </div>
+  <p class="section-desc" data-fr="Chaque lab simule un environnement réel avec un problème à résoudre. La VM est fournie dans un état non fonctionnel volontairement simple — l'objectif est de comprendre le pourquoi, pas seulement le comment." data-en="Each lab simulates a real environment with a problem to solve. The VM is provided in a deliberately simple broken state — the goal is to understand the why, not just the how.">Chaque lab simule un environnement réel avec un problème à résoudre. La VM est fournie dans un état non fonctionnel volontairement simple — l'objectif est de comprendre le pourquoi, pas seulement le comment.</p>
+
+  <div class="philosophy-grid">
+    <div class="philosophy-card fade-in">
+      <div class="phi-icon">01_</div>
+      <h3 data-fr="VM Préconfigurée" data-en="Pre-configured VM">VM Préconfigurée</h3>
+      <p data-fr="Une machine virtuelle Ubuntu/Debian vous est fournie. Elle démarre, mais quelque chose ne fonctionne pas. À vous de trouver." data-en="An Ubuntu/Debian virtual machine is provided. It boots, but something isn't working. It's up to you to find out.">Une machine virtuelle Ubuntu/Debian vous est fournie. Elle démarre, mais quelque chose ne fonctionne pas. À vous de trouver.</p>
+    </div>
+    <div class="philosophy-card fade-in">
+      <div class="phi-icon">02_</div>
+      <h3 data-fr="Script Guidé" data-en="Guided Script">Script Guidé</h3>
+      <p data-fr="Un script partiellement rédigé vous guide pas à pas. Les sections critiques sont remplacées par des TODO — à vous de les compléter." data-en="A partially written script guides you step by step. Critical sections are replaced by TODOs — yours to complete.">Un script partiellement rédigé vous guide pas à pas. Les sections critiques sont remplacées par des TODO — à vous de les compléter.</p>
+    </div>
+    <div class="philosophy-card fade-in">
+      <div class="phi-icon">03_</div>
+      <h3 data-fr="Diagnostic Actif" data-en="Active Diagnostics">Diagnostic Actif</h3>
+      <p data-fr="Avant de corriger, vous devez diagnostiquer. Chaque lab enseigne les commandes de vérification d'état (systemctl, journalctl, ss…)." data-en="Before fixing, you must diagnose. Each lab teaches status-check commands (systemctl, journalctl, ss…).">Avant de corriger, vous devez diagnostiquer. Chaque lab enseigne les commandes de vérification d'état (systemctl, journalctl, ss…).</p>
+    </div>
+    <div class="philosophy-card fade-in">
+      <div class="phi-icon">04_</div>
+      <h3 data-fr="Solution Dépliable" data-en="Reveal-on-Demand Solution">Solution Dépliable</h3>
+      <p data-fr="Bloqué ? La solution complète est disponible dans une section masquée. L'objectif reste d'essayer avant de regarder." data-en="Stuck? The full solution is available in a hidden section. The goal is still to try before peeking.">Bloqué ? La solution complète est disponible dans une section masquée. L'objectif reste d'essayer avant de regarder.</p>
+    </div>
+  </div>
+
+  <!-- LABS -->
+  <div id="labs" class="section-header">
+    <h2 data-fr="Labs Disponibles" data-en="Available Labs">Labs Disponibles</h2>
+    <span class="count">// 10 labs · hands-on</span>
+  </div>
+  <p class="section-desc" data-fr="Choisissez un lab et suivez le tutoriel. Chaque exercice correspond à un outil réellement utilisé dans un SOC ou une équipe défensive." data-en="Pick a lab and follow the tutorial. Each exercise corresponds to a tool actually used in a SOC or defensive team.">Choisissez un lab et suivez le tutoriel. Chaque exercice correspond à un outil réellement utilisé dans un SOC ou une équipe défensive.</p>
+
+  <div class="lab-grid">
+
+    <a href="labs/linux-intro.html" class="lab-card cat-anssi fade-in">
+      <div class="lab-meta">
+        <span class="lab-label">Lab · Linux · Terminal</span>
+        <span class="lab-badge badge-beginner" data-fr="Débutant" data-en="Beginner">Débutant</span>
+      </div>
+      <div class="lab-title" data-fr="Linux 101 — Survivre dans un Terminal" data-en="Linux 101 — Terminal Survival">Linux 101 — Survivre dans un Terminal</div>
+      <div class="lab-desc" data-fr="Le terminal vous fait peur ? Normal. Dans ce lab, vous allez apprendre à naviguer, lire des fichiers et tuer des processus en 6 étapes. Votre souris pleurera." data-en="Does the terminal scare you? Normal. In this lab, you'll learn to navigate, read files, and kill processes in 6 steps. Your mouse will cry.">Le terminal vous fait peur ? Normal. Dans ce lab, vous allez apprendre à naviguer, lire des fichiers et tuer des processus en 6 étapes. Votre souris pleurera.</div>
+      <div class="lab-tags">
+        <span class="lab-tag">linux</span>
+        <span class="lab-tag">bash</span>
+        <span class="lab-tag">terminal</span>
+      </div>
+    </a>
+
+    <a href="labs/password.html" class="lab-card cat-anssi fade-in">
+      <div class="lab-meta">
+        <span class="lab-label">Lab · Security · Accounts</span>
+        <span class="lab-badge badge-beginner" data-fr="Débutant" data-en="Beginner">Débutant</span>
+      </div>
+      <div class="lab-title" data-fr="Cédric et le Mot de Passe en Carton" data-en="Cédric and the Cardboard Password">Cédric et le Mot de Passe en Carton</div>
+      <div class="lab-desc" data-fr="Cédric a mis 'password' comme mot de passe. Oui, vraiment. Votre mission : sauver l'équipe de la honte en forçant un vrai mot de passe." data-en="Cédric set his password to 'password'. Yes, really. Your mission: save the team from embarrassment by enforcing a real password.">Cédric a mis 'password' comme mot de passe. Oui, vraiment. Votre mission : sauver l'équipe de la honte en forçant un vrai mot de passe.</div>
+      <div class="lab-tags">
+        <span class="lab-tag">usermod</span>
+        <span class="lab-tag">passwd</span>
+        <span class="lab-tag">security</span>
+      </div>
+    </a>
+
+    <a href="labs/aes.html" class="lab-card cat-mitre fade-in">
+      <div class="lab-meta">
+        <span class="lab-label">Lab · Crypto · AES</span>
+        <span class="lab-badge badge-beginner" data-fr="Débutant" data-en="Beginner">Débutant</span>
+      </div>
+      <div class="lab-title" data-fr="Le PDF Chiffré du Patron" data-en="The Boss's Encrypted PDF">Le PDF Chiffré du Patron</div>
+      <div class="lab-desc" data-fr="Votre patron vous a envoyé un document 'ULTRA IMPORTANT' chiffré avec AES. Il vous donne 3 mots de passe possibles. Bonne chance." data-en="Your boss sent you an 'ULTRA IMPORTANT' document encrypted with AES. He gives you 3 possible passwords. Good luck.">Votre patron vous a envoyé un document 'ULTRA IMPORTANT' chiffré avec AES. Il vous donne 3 mots de passe possibles. Bonne chance.</div>
+      <div class="lab-tags">
+        <span class="lab-tag">openssl</span>
+        <span class="lab-tag">aes-256</span>
+        <span class="lab-tag">crypto</span>
+      </div>
+    </a>
+
+    <a href="labs/rsa.html" class="lab-card cat-nist fade-in">
+      <div class="lab-meta">
+        <span class="lab-label">Lab · Crypto · GPG</span>
+        <span class="lab-badge badge-beginner" data-fr="Débutant" data-en="Beginner">Débutant</span>
+      </div>
+      <div class="lab-title" data-fr="La Clé Secrète du Patron (GPG)" data-en="The Boss's Secret Key (GPG)">La Clé Secrète du Patron (GPG)</div>
+      <div class="lab-desc" data-fr="Vous avez changé d'ordi mais gardé votre clé privée. Le patron a chiffré un message rien que pour vous. Importez la clé, déchiffrez le message, lisez les mauvaises nouvelles." data-en="You changed computers but kept your private key. The boss encrypted a message just for you. Import the key, decrypt the message, read the bad news.">Vous avez changé d'ordi mais gardé votre clé privée. Le patron a chiffré un message rien que pour vous. Importez la clé, déchiffrez le message, lisez les mauvaises nouvelles.</div>
+      <div class="lab-tags">
+        <span class="lab-tag">gpg</span>
+        <span class="lab-tag">rsa</span>
+        <span class="lab-tag">asymmetric</span>
+      </div>
+    </a>
+
+    <a href="labs/network-flux.html" class="lab-card cat-tools fade-in">
+      <div class="lab-meta">
+        <span class="lab-label">Lab · Network · Monitoring</span>
+        <span class="lab-badge badge-beginner" data-fr="Débutant" data-en="Beginner">Débutant</span>
+      </div>
+      <div class="lab-title" data-fr="Le Trafic Suspect de la Nuit" data-en="The Suspicious Night Traffic">Le Trafic Suspect de la Nuit</div>
+      <div class="lab-desc" data-fr="Quelque chose envoie des requêtes HTTP vers une IP inconnue toutes les 30 secondes. Utilisez ss et lsof pour trouver le coupable — et l'éliminer." data-en="Something is sending HTTP requests to an unknown IP every 30 seconds. Use ss and lsof to find the culprit — and eliminate it.">Quelque chose envoie des requêtes HTTP vers une IP inconnue toutes les 30 secondes. Utilisez ss et lsof pour trouver le coupable — et l'éliminer.</div>
+      <div class="lab-tags">
+        <span class="lab-tag">ss</span>
+        <span class="lab-tag">lsof</span>
+        <span class="lab-tag">network</span>
+      </div>
+    </a>
+
+    <a href="labs/iptables.html" class="lab-card cat-mitre fade-in">
+      <div class="lab-meta">
+        <span class="lab-label">Lab · Firewall · iptables</span>
+        <span class="lab-badge badge-beginner" data-fr="Débutant" data-en="Beginner">Débutant</span>
+      </div>
+      <div class="lab-title" data-fr="Jimmy a Cassé le Pare-feu" data-en="Jimmy Broke the Firewall">Jimmy a Cassé le Pare-feu</div>
+      <div class="lab-desc" data-fr="Jimmy a joué avec iptables et maintenant HTTP est bloqué partout. Jimmy est en vacances. C'est votre problème maintenant." data-en="Jimmy played with iptables and now HTTP is blocked everywhere. Jimmy is on vacation. It's your problem now.">Jimmy a joué avec iptables et maintenant HTTP est bloqué partout. Jimmy est en vacances. C'est votre problème maintenant.</div>
+      <div class="lab-tags">
+        <span class="lab-tag">iptables</span>
+        <span class="lab-tag">firewall</span>
+        <span class="lab-tag">http</span>
+      </div>
+    </a>
+
+    <a href="labs/who-listens.html" class="lab-card cat-nist fade-in">
+      <div class="lab-meta">
+        <span class="lab-label">Lab · Forensics · Network</span>
+        <span class="lab-badge badge-beginner" data-fr="Débutant" data-en="Beginner">Débutant</span>
+      </div>
+      <div class="lab-title" data-fr="Qui Écoute sur le Port 4444 ?" data-en="Who Is Listening on Port 4444?">Qui Écoute sur le Port 4444 ?</div>
+      <div class="lab-desc" data-fr="Quelqu'un a ouvert un port d'écoute sur votre serveur. Le patron a reçu un message bizarre. Utilisez ss pour trouver l'oreille indiscrète et la fermer." data-en="Someone opened a listening port on your server. The boss got a weird message. Use ss to find the nosy ear and close it.">Quelqu'un a ouvert un port d'écoute sur votre serveur. Le patron a reçu un message bizarre. Utilisez ss pour trouver l'oreille indiscrète et la fermer.</div>
+      <div class="lab-tags">
+        <span class="lab-tag">ss</span>
+        <span class="lab-tag">netcat</span>
+        <span class="lab-tag">ports</span>
+      </div>
+    </a>
+
+    <a href="labs/clamav.html" class="lab-card cat-av fade-in">
+      <div class="lab-meta">
+        <span class="lab-label">Lab · AV</span>
+        <span class="lab-badge badge-beginner" data-fr="Débutant" data-en="Beginner">Débutant</span>
+      </div>
+      <div class="lab-title" data-fr="Antivirus ClamAV — Installation &amp; Configuration" data-en="ClamAV Antivirus — Install &amp; Configure">Antivirus ClamAV — Installation &amp; Configuration</div>
+      <div class="lab-desc" data-fr="La VM démarre mais ClamAV n'est pas opérationnel. Base de signatures manquante, service inactif. Corrigez et lancez votre premier scan." data-en="The VM boots but ClamAV is not operational. Missing signature database, inactive service. Fix it and run your first scan.">La VM démarre mais ClamAV n'est pas opérationnel. Base de signatures manquante, service inactif. Corrigez et lancez votre premier scan.</div>
+      <div class="lab-tags">
+        <span class="lab-tag">clamav</span>
+        <span class="lab-tag">systemd</span>
+        <span class="lab-tag">freshclam</span>
+      </div>
+    </a>
+
+    <a href="labs/suricata.html" class="lab-card cat-ids fade-in">
+      <div class="lab-meta">
+        <span class="lab-label">Lab · IDS</span>
+        <span class="lab-badge badge-intermediate" data-fr="Intermédiaire" data-en="Intermediate">Intermédiaire</span>
+      </div>
+      <div class="lab-title" data-fr="Suricata IDS — Interface &amp; Règles" data-en="Suricata IDS — Interface &amp; Rules">Suricata IDS — Interface &amp; Règles</div>
+      <div class="lab-desc" data-fr="Suricata est installé mais l'interface réseau n'est pas configurée et les règles communautaires sont désactivées. Aucune alerte ne sera générée." data-en="Suricata is installed but the network interface is not configured and community rules are disabled. No alerts will be generated.">Suricata est installé mais l'interface réseau n'est pas configurée et les règles communautaires sont désactivées. Aucune alerte ne sera générée.</div>
+      <div class="lab-tags">
+        <span class="lab-tag">suricata</span>
+        <span class="lab-tag">IDS</span>
+        <span class="lab-tag">emerging-threats</span>
+        <span class="lab-tag">yaml</span>
+      </div>
+    </a>
+
+    <a href="labs/sysmon.html" class="lab-card cat-log fade-in">
+      <div class="lab-meta">
+        <span class="lab-label">Lab · Logging</span>
+        <span class="lab-badge badge-intermediate" data-fr="Intermédiaire" data-en="Intermediate">Intermédiaire</span>
+      </div>
+      <div class="lab-title" data-fr="Sysmon Linux — Télémétrie Système" data-en="Sysmon Linux — System Telemetry">Sysmon Linux — Télémétrie Système</div>
+      <div class="lab-desc" data-fr="Sysmon pour Linux est présent mais aucun fichier de configuration XML n'est chargé et le service n'est pas activé. Aucun événement n'est collecté." data-en="Sysmon for Linux is present but no XML config file is loaded and the service is not enabled. No events are being collected.">Sysmon pour Linux est présent mais aucun fichier de configuration XML n'est chargé et le service n'est pas activé. Aucun événement n'est collecté.</div>
+      <div class="lab-tags">
+        <span class="lab-tag">sysmon</span>
+        <span class="lab-tag">linux</span>
+        <span class="lab-tag">syslog</span>
+        <span class="lab-tag">xml</span>
+      </div>
+    </a>
+
+  </div>
+
+</main>
+
+<footer>
+  TEHTRI-S-Hub Labs &nbsp;·&nbsp; <span data-fr="Plateforme de formation cybersécurité" data-en="Cybersecurity Training Platform">Plateforme de formation cybersécurité</span> &nbsp;·&nbsp; Learn · Break · Fix
+</footer>
+
+<script>
+  (function(){setLang(localStorage.getItem('lang')||'fr');})();
+  function setLang(l){
+    localStorage.setItem('lang',l);
+    document.documentElement.lang=l;
+    document.querySelectorAll('[data-fr][data-en]').forEach(function(e){e.textContent=e.dataset[l];});
+    var f=document.getElementById('btn-fr'),n=document.getElementById('btn-en');
+    if(f&&n){f.classList.toggle('on',l==='fr');n.classList.toggle('on',l==='en');}
+  }
+</script>
+</body>
+</html>

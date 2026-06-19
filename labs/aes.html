@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEHTRI-S-Hub Labs — Le PDF Chiffré du Patron</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0c0f; --bg2:#111418; --bg3:#181c22; --border:#1e2530;
+    --accent:#00e5a0; --accent2:#0af; --accent3:#f05a28;
+    --text:#c8d0dc; --text-dim:#5a6580; --text-hi:#eef2f8;
+    --mono:'Share Tech Mono',monospace; --sans:'Barlow',sans-serif; --cond:'Barlow Condensed',sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.65;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 4px);pointer-events:none;z-index:9999;}
+  header{position:sticky;top:0;z-index:100;background:rgba(10,12,15,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;gap:2rem;height:56px;}
+  .logo{font-family:var(--cond);font-weight:900;font-size:1.3rem;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;text-decoration:none;flex-shrink:0;}
+  .logo span{color:var(--text-dim);font-weight:300;}
+  nav{display:flex;gap:0;margin-left:auto;align-items:center;}
+  nav a{font-family:var(--mono);font-size:.75rem;color:var(--text-dim);text-decoration:none;padding:0 1rem;height:56px;display:flex;align-items:center;border-left:1px solid var(--border);transition:color .2s,background .2s;letter-spacing:.05em;}
+  nav a:hover{color:var(--accent);background:rgba(0,229,160,.04);}
+  nav a.active{color:var(--accent);border-bottom:2px solid var(--accent);}
+
+  .lab-hero{padding:4rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+  .breadcrumb{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);letter-spacing:.1em;margin-bottom:1.5rem;}
+  .breadcrumb a{color:var(--text-dim);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--accent);}
+  .lab-meta-row{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+  .lab-cat{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;}
+  .lab-difficulty{font-family:var(--mono);font-size:.6rem;padding:2px 8px;border-radius:2px;border:1px solid #00e5a0;color:#00e5a0;background:rgba(0,229,160,.07);letter-spacing:.08em;}
+  .lab-hero h1{font-family:var(--cond);font-weight:900;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;color:var(--text-hi);letter-spacing:-.01em;margin-bottom:1rem;}
+  .lab-hero h1 em{font-style:normal;color:var(--accent);}
+  .lab-hero .hero-tag{font-family:var(--mono);font-size:.7rem;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.75rem;}
+  .lab-hero p{max-width:560px;color:var(--text-dim);font-size:.95rem;line-height:1.7;}
+
+  main{max-width:860px;margin:0 auto;padding:0 2rem 6rem;}
+
+  .prog-wrap{position:sticky;top:56px;z-index:90;background:rgba(10,12,15,.95);border-bottom:1px solid var(--border);padding:.6rem 2rem;display:flex;align-items:center;gap:1rem;}
+  .prog-track{display:flex;align-items:center;gap:0;flex:1;}
+  .p-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);color:var(--text-dim);font-family:var(--mono);font-size:.65rem;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .25s;}
+  .p-dot.active{border-color:var(--accent);color:var(--accent);}
+  .p-dot.done{background:var(--accent);border-color:var(--accent);color:var(--bg);font-size:.8rem;}
+  .p-line{flex:1;min-width:16px;max-width:60px;height:2px;background:var(--border);transition:background .25s;}
+  .p-line.done{background:var(--accent);}
+  .prog-label{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);letter-spacing:.1em;flex-shrink:0;}
+
+  .done-banner{display:none;background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.3);border-radius:6px;padding:1.5rem 2rem;margin:3rem 0 1rem;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+  .done-banner .done-icon{font-size:2rem;}
+  .done-banner strong{font-family:var(--cond);font-size:1.4rem;color:var(--accent);letter-spacing:.05em;}
+  .done-banner a{font-family:var(--mono);font-size:.8rem;color:var(--accent2);border:1px solid var(--accent2);border-radius:3px;padding:.4rem .9rem;text-decoration:none;transition:background .2s;}
+  .done-banner a:hover{background:rgba(0,170,255,.1);}
+  .mark-done-btn{font-family:var(--mono);font-size:.72rem;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:3px;padding:.35rem .9rem;cursor:pointer;letter-spacing:.08em;transition:all .2s;margin-top:1.5rem;}
+  .mark-done-btn:hover{background:var(--accent);color:var(--bg);}
+
+  .step{margin-bottom:3rem;padding-top:1rem;}
+  .step-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border);}
+  .step-num{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;flex-shrink:0;}
+  .step-header h2{font-family:var(--cond);font-weight:700;font-size:1.2rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-hi);}
+  .step p{color:var(--text-dim);font-size:.9rem;line-height:1.65;margin-bottom:.75rem;}
+  .step ul,.step ol{padding-left:1.4rem;color:var(--text-dim);font-size:.9rem;line-height:1.7;margin-bottom:.75rem;}
+  .step li{margin-bottom:.25rem;}
+
+  .concept-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:4px;padding:1.2rem 1.5rem;margin-bottom:2rem;}
+  .concept-box .cb-tag{font-family:var(--mono);font-size:.6rem;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem;}
+  .concept-box .cb-title{font-family:var(--cond);font-weight:700;font-size:1.1rem;color:var(--text-hi);margin-bottom:.75rem;letter-spacing:.05em;}
+  .concept-box .cb-body{font-size:.9rem;color:var(--text);line-height:1.7;}
+  .concept-box .cb-body strong{color:var(--accent2);}
+
+  pre{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1rem 1.2rem;overflow-x:auto;margin-bottom:1rem;position:relative;}
+  pre code{font-family:var(--mono);font-size:.8rem;color:var(--text);line-height:1.7;}
+  .code-label{font-family:var(--mono);font-size:.6rem;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem;}
+  .todo-line{color:#f7c948;}
+  .comment-line{color:var(--text-dim);}
+  .cmd-line{color:var(--accent);}
+
+  code:not(pre code){font-family:var(--mono);font-size:.82em;color:var(--accent2);background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:1px 5px;}
+
+  .info-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent2);border-radius:4px;padding:.9rem 1.2rem;margin-bottom:1rem;font-size:.88rem;color:var(--text-dim);}
+  .info-box strong{color:var(--text-hi);font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;display:block;margin-bottom:.3rem;}
+
+  details.solution{margin-top:.5rem;}
+  details.solution>summary{cursor:pointer;font-family:var(--mono);font-size:.75rem;color:var(--accent3);letter-spacing:.1em;list-style:none;display:flex;align-items:center;gap:.5rem;padding:.5rem 0;user-select:none;transition:color .2s;}
+  details.solution>summary:hover{color:#ff8060;}
+  details.solution>summary::before{content:'▶';font-size:.6rem;transition:transform .2s;}
+  details[open].solution>summary::before{transform:rotate(90deg);}
+  details.solution .solution-body{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent3);border-radius:4px;padding:1rem 1.2rem;margin-top:.5rem;}
+  details.solution .solution-body p{color:var(--text-dim);font-size:.88rem;margin-bottom:.6rem;}
+
+  .success-box{background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.25);border-radius:4px;padding:1rem 1.2rem;font-size:.88rem;color:var(--text);}
+  .success-box strong{color:var(--accent);font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;display:block;margin-bottom:.4rem;}
+
+  footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;font-family:var(--mono);font-size:.7rem;color:var(--text-dim);letter-spacing:.08em;}
+.i18n-toggle{display:flex;align-items:center;gap:0;margin-left:1.5rem;border:1px solid var(--accent);border-radius:3px;overflow:hidden;flex-shrink:0;}
+  .i18n-toggle button{background:var(--bg2);border:none;cursor:pointer;font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.12em;color:var(--text-dim);padding:5px 12px;line-height:1;transition:background .15s,color .15s;}
+  .i18n-toggle button.on{background:var(--accent);color:#0a0c0f;}
+  .i18n-toggle button:not(.on):hover{background:var(--bg3);color:var(--accent);}
+  .i18n-toggle .i18n-sep{width:1px;background:var(--accent);align-self:stretch;flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="../index.html">TEHTRI-S-Hub <span>/ Labs</span></a>
+  <nav>
+    <a href="../index.html" data-fr="Accueil" data-en="Home">Accueil</a>
+    <a href="../index.html#labs" class="active" data-fr="Labs" data-en="Labs">Labs</a>
+    <a href="../resources.html" data-fr="Ressources" data-en="Resources">Ressources</a>
+    <a href="../resources.html#books" data-fr="Livres" data-en="Books">Livres</a>
+    <a href="../credits.html" data-fr="Crédits" data-en="Credits">Crédits</a>
+  </nav>
+<div class="i18n-toggle"><button id="btn-fr" class="on" onclick="setLang('fr')">FR</button><div class="i18n-sep"></div><button id="btn-en" onclick="setLang('en')">EN</button></div>
+  </header>
+
+<section class="lab-hero">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a> &nbsp;/&nbsp; <a href="../index.html#labs">Labs</a> &nbsp;/&nbsp; <span data-fr="Le PDF Chiffré du Patron" data-en="The Boss's Encrypted PDF">Le PDF Chiffré du Patron</span>
+  </div>
+  <div class="hero-tag" data-fr="Cryptographie · Chiffrement Symétrique" data-en="Cryptography · Symmetric Encryption">Cryptographie · Chiffrement Symétrique</div>
+  <div class="lab-meta-row">
+    <span class="lab-cat">Lab · Crypto · AES</span>
+    <span class="lab-difficulty" data-fr="Débutant" data-en="Beginner">Débutant</span>
+  </div>
+  <h1><span data-fr="Le PDF Chiffré" data-en="The Encrypted PDF">Le PDF Chiffré</span> <em data-fr="du Patron" data-en="of the Boss">du Patron</em></h1>
+  <p data-fr="Votre patron vous a envoyé un document 'ULTRA IMPORTANT' (c'était marqué en rouge dans le mail). Sauf qu'il est chiffré. Il vous a dit que le mot de passe est l'un de trois... Bonne chance pour deviner lequel." data-en="Your boss sent you a document marked 'ULTRA IMPORTANT' (in red in the email). Except it's encrypted. He said the password is one of three options... Good luck guessing which.">Votre patron vous a envoyé un document 'ULTRA IMPORTANT' (c'était marqué en rouge dans le mail). Sauf qu'il est chiffré. Il vous a dit que le mot de passe est l'un de trois... Bonne chance pour deviner lequel.</p>
+</section>
+
+<!-- PROGRESS BAR -->
+<div class="prog-wrap">
+  <div class="prog-track">
+    <div class="p-dot active" id="dot-1" onclick="goStep(1)">1</div>
+    <div class="p-line" id="line-1"></div>
+    <div class="p-dot" id="dot-2" onclick="goStep(2)">2</div>
+    <div class="p-line" id="line-2"></div>
+    <div class="p-dot" id="dot-3" onclick="goStep(3)">3</div>
+    <div class="p-line" id="line-3"></div>
+    <div class="p-dot" id="dot-4" onclick="goStep(4)">4</div>
+    <div class="p-line" id="line-4"></div>
+    <div class="p-dot" id="dot-5" onclick="goStep(5)">5</div>
+  </div>
+  <span class="prog-label" id="prog-label">1 / 5</span>
+</div>
+
+<main>
+
+  <!-- STEP 1 -->
+  <div class="step" id="step-1">
+    <div class="step-header">
+      <span class="step-num">01 //</span>
+      <h2 data-fr="Concept : AES c'est quoi ?" data-en="Concept: What is AES?">Concept : AES c'est quoi ?</h2>
+    </div>
+
+    <div class="concept-box">
+      <div class="cb-tag" data-fr="Concept clé" data-en="Key concept">Concept clé</div>
+      <div class="cb-title" data-fr="AES : La recette secrète que seul vous partagez avec votre patron" data-en="AES: The secret recipe only you and your boss share">AES : La recette secrète que seul vous partagez avec votre patron</div>
+      <div class="cb-body" data-fr="Imaginez que vous et votre patron avez une recette secrète pour mélanger du texte : 'prends chaque lettre, ajoute 7, inverse le résultat, mélange avec la clé...' AES fait exactement ça — 14 fois, avec une clé de 256 bits. Pour déchiffrer, il faut LA MÊME clé. C'est pour ça qu'on appelle ça du chiffrement symétrique : même clé pour fermer ET ouvrir." data-en="Imagine you and your boss have a secret recipe for scrambling text: 'take each letter, add 7, reverse the result, mix with the key...' AES does exactly that — 14 times, with a 256-bit key. To decrypt, you need THE SAME key. That's why it's called symmetric encryption: same key to lock AND unlock.">Imaginez que vous et votre patron avez une recette secrète pour mélanger du texte : <strong>'prends chaque lettre, ajoute 7, inverse le résultat, mélange avec la clé...'</strong> AES fait exactement ça — 14 fois, avec une clé de 256 bits. Pour déchiffrer, il faut LA MÊME clé. C'est pour ça qu'on appelle ça du <strong>chiffrement symétrique</strong> : même clé pour fermer ET ouvrir.</div>
+    </div>
+
+    <button class="mark-done-btn" onclick="markDone(1)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step" id="step-2">
+    <div class="step-header">
+      <span class="step-num">02 //</span>
+      <h2 data-fr="Identifier le fichier chiffré" data-en="Identify the encrypted file">Identifier le fichier chiffré</h2>
+    </div>
+
+    <p data-fr="Le patron a chiffré le fichier avec openssl. Commençons par examiner ce que nous avons avant d'essayer de l'ouvrir." data-en="The boss encrypted the file with openssl. Let's start by examining what we have before trying to open it.">Le patron a chiffré le fichier avec openssl. Commençons par examiner ce que nous avons avant d'essayer de l'ouvrir.</p>
+
+    <div class="code-label" data-fr="Inspection du fichier chiffré" data-en="Inspecting the encrypted file">Inspection du fichier chiffré</div>
+    <pre><code><span class="comment-line"># Voir le fichier chiffré</span>
+<span class="cmd-line">ls -lh</span>
+<span class="cmd-line">file Ultra_important_secret.pdf</span>
+<span class="comment-line"># → "openssl enc'd data with salted password"</span>
+
+<span class="comment-line"># Essayer de l'ouvrir sans mot de passe (spoiler : ça marche pas)</span>
+<span class="cmd-line">cat Ultra_important_secret.pdf</span></code></pre>
+
+    <div class="info-box">
+      <strong data-fr="COMMENT LE FICHIER A ÉTÉ CHIFFRÉ" data-en="HOW THE FILE WAS ENCRYPTED">COMMENT LE FICHIER A ÉTÉ CHIFFRÉ</strong>
+      <span data-fr="Le patron a utilisé : openssl enc -aes-256-cbc -in original.pdf -out Ultra_important_secret.pdf -k MOT_DE_PASSE. Votre mission : retrouver le bon mot de passe parmi les trois candidats." data-en="The boss used: openssl enc -aes-256-cbc -in original.pdf -out Ultra_important_secret.pdf -k PASSWORD. Your mission: find the right password among the three candidates.">Le patron a utilisé : <code>openssl enc -aes-256-cbc -in original.pdf -out secret.pdf -k MOT_DE_PASSE</code>. Votre mission : retrouver le bon mot de passe parmi les trois candidats.</span>
+    </div>
+
+    <button class="mark-done-btn" onclick="markDone(2)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step" id="step-3">
+    <div class="step-header">
+      <span class="step-num">03 //</span>
+      <h2 data-fr="Trouver le bon mot de passe" data-en="Find the right password">Trouver le bon mot de passe</h2>
+    </div>
+
+    <p data-fr="Le patron vous a donné 3 candidats. Testez-les un par un — un seul déchiffrera correctement le fichier." data-en="The boss gave you 3 candidates. Test them one by one — only one will correctly decrypt the file.">Le patron vous a donné 3 candidats. Testez-les un par un — un seul déchiffrera correctement le fichier.</p>
+
+    <div class="code-label">decipher_attempt.sh</div>
+    <pre><code><span class="comment-line"># Le patron vous a dit que le mot de passe est l'un de ces trois :
+# - Aniki&lt;3
+# - BGduWeb25
+# - Urt1ka1r3</span>
+
+<span class="comment-line"># Syntaxe : openssl enc -d -aes-256-cbc -in FICHIER -out SORTIE -k MOT_DE_PASSE</span>
+
+<span class="comment-line"># Tentative 1</span>
+<span class="todo-line">openssl enc -d -???-???-??? -in Ultra_important_secret.pdf -out essai1.pdf -k Aniki&lt;3</span>
+
+<span class="comment-line"># TODO: Tentative 2 avec BGduWeb25</span>
+<span class="todo-line">openssl enc -d -???-???-??? -in Ultra_important_secret.pdf -out essai2.pdf -k ???</span>
+
+<span class="comment-line"># TODO: Tentative 3 avec Urt1ka1r3</span>
+<span class="todo-line">openssl enc -d -???-???-??? -in Ultra_important_secret.pdf -out essai3.pdf -k ???</span></code></pre>
+
+    <details class="solution">
+      <summary data-fr="▸ AFFICHER LA SOLUTION (essayez d'abord !)" data-en="▸ SHOW SOLUTION (try first!)">▸ AFFICHER LA SOLUTION (essayez d'abord !)</summary>
+      <div class="solution-body">
+        <p data-fr="Remplacez les ??? par -aes-256-cbc et les mots de passe correspondants :" data-en="Replace ??? with -aes-256-cbc and the corresponding passwords:">Remplacez les <code>???</code> par <code>-aes-256-cbc</code> et les mots de passe correspondants :</p>
+        <pre><code><span class="cmd-line">openssl enc -d -aes-256-cbc -in Ultra_important_secret.pdf -out essai1.pdf -k "Aniki<3"</span>
+<span class="cmd-line">openssl enc -d -aes-256-cbc -in Ultra_important_secret.pdf -out essai2.pdf -k "BGduWeb25"</span>
+<span class="cmd-line">openssl enc -d -aes-256-cbc -in Ultra_important_secret.pdf -out essai3.pdf -k "Urt1ka1r3"</span>
+<span class="comment-line"># Vérifiez lequel donne un vrai PDF :</span>
+<span class="cmd-line">file essai1.pdf essai2.pdf essai3.pdf</span></code></pre>
+      </div>
+    </details>
+
+    <button class="mark-done-btn" onclick="markDone(3)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step" id="step-4">
+    <div class="step-header">
+      <span class="step-num">04 //</span>
+      <h2 data-fr="Déchiffrer et lire" data-en="Decrypt and read">Déchiffrer et lire</h2>
+    </div>
+
+    <p data-fr="Une fois le bon mot de passe trouvé, déchiffrez proprement le fichier et vérifiez que le PDF est lisible." data-en="Once you've found the right password, cleanly decrypt the file and verify the PDF is readable.">Une fois le bon mot de passe trouvé, déchiffrez proprement le fichier et vérifiez que le PDF est lisible.</p>
+
+    <div class="code-label" data-fr="Déchiffrement final" data-en="Final decryption">Déchiffrement final</div>
+    <pre><code><span class="comment-line"># Une fois le bon mot de passe trouvé, déchiffrer proprement</span>
+<span class="cmd-line">openssl enc -d -aes-256-cbc -in Ultra_important_secret.pdf -out message_du_patron.pdf -k LE_BON_MOT_DE_PASSE</span>
+
+<span class="comment-line"># Vérifier que le PDF est lisible</span>
+<span class="cmd-line">file message_du_patron.pdf</span>
+<span class="cmd-line">ls -lh message_du_patron.pdf</span></code></pre>
+
+    <div class="success-box">
+      <strong data-fr="SUCCÈS ATTENDU" data-en="EXPECTED SUCCESS">SUCCÈS ATTENDU</strong>
+      <span data-fr="file message_du_patron.pdf doit afficher : PDF document. Si vous voyez 'data' ou des erreurs OpenSSL, ce n'est pas le bon mot de passe." data-en="file message_du_patron.pdf should show: PDF document. If you see 'data' or OpenSSL errors, that's not the right password."><code>file message_du_patron.pdf</code> doit afficher : <code>PDF document</code>. Si vous voyez <code>data</code> ou des erreurs OpenSSL, ce n'est pas le bon mot de passe.</span>
+    </div>
+
+    <button class="mark-done-btn" onclick="markDone(4)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step" id="step-5">
+    <div class="step-header">
+      <span class="step-num">05 //</span>
+      <h2 data-fr="Pour aller plus loin" data-en="Going further">Pour aller plus loin</h2>
+    </div>
+
+    <p data-fr="Maintenant que vous maîtrisez le déchiffrement, essayez de chiffrer vos propres fichiers !" data-en="Now that you master decryption, try encrypting your own files!">Maintenant que vous maîtrisez le déchiffrement, essayez de chiffrer vos propres fichiers !</p>
+
+    <div class="code-label" data-fr="Chiffrez votre propre fichier" data-en="Encrypt your own file">Chiffrez votre propre fichier</div>
+    <pre><code><span class="comment-line"># Créer un fichier test</span>
+<span class="cmd-line">echo "Mon message secret" > mon_secret.txt</span>
+
+<span class="comment-line"># Chiffrer avec AES-256</span>
+<span class="cmd-line">openssl enc -aes-256-cbc -in mon_secret.txt -out mon_secret.enc -k "MonMotDePasse"</span>
+
+<span class="comment-line"># Utiliser -pbkdf2 pour plus de sécurité (recommandé)</span>
+<span class="cmd-line">openssl enc -aes-256-cbc -pbkdf2 -in mon_secret.txt -out mon_secret_secure.enc -k "MonMotDePasse"</span>
+
+<span class="comment-line"># Déchiffrer</span>
+<span class="cmd-line">openssl enc -d -aes-256-cbc -pbkdf2 -in mon_secret_secure.enc -out resultat.txt -k "MonMotDePasse"</span>
+<span class="cmd-line">cat resultat.txt</span></code></pre>
+
+    <div class="info-box">
+      <strong data-fr="DOCUMENTATION OFFICIELLE" data-en="OFFICIAL DOCUMENTATION">DOCUMENTATION OFFICIELLE</strong>
+      <span data-fr="Pour aller plus loin : man openssl-enc ou https://www.openssl.org/docs/man1.1.1/man1/enc.html" data-en="To go further: man openssl-enc or https://www.openssl.org/docs/man1.1.1/man1/enc.html">Pour aller plus loin : <code>man openssl-enc</code> ou <a href="https://www.openssl.org/docs/" target="_blank" rel="noopener" style="color:var(--accent2);">openssl.org/docs</a></span>
+    </div>
+
+    <button class="mark-done-btn" onclick="markDone(5)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- DONE BANNER -->
+  <div class="done-banner" id="done-banner">
+    <div class="done-icon">✓</div>
+    <div>
+      <strong data-fr="Lab terminé !" data-en="Lab complete!">Lab terminé !</strong><br>
+      <span style="font-size:.85rem;color:var(--text-dim);" data-fr="Vous avez déchiffré le document ULTRA IMPORTANT. Spoiler : c'était probablement une convocation pour une réunion à 8h." data-en="You decrypted the ULTRA IMPORTANT document. Spoiler: it was probably a summons for an 8am meeting.">Vous avez déchiffré le document ULTRA IMPORTANT. Spoiler : c'était probablement une convocation pour une réunion à 8h.</span>
+    </div>
+    <a href="../index.html#labs" data-fr="← Retour aux Labs" data-en="← Back to Labs">← Retour aux Labs</a>
+  </div>
+
+</main>
+
+<footer>
+  TEHTRI-S-Hub Labs &nbsp;·&nbsp; <span data-fr="Le PDF Chiffré du Patron" data-en="The Boss's Encrypted PDF">Le PDF Chiffré du Patron</span> &nbsp;·&nbsp; AES-256
+</footer>
+
+
+<script>
+
+  var totalSteps=5;
+  function markDone(n){
+    var dot=document.getElementById('dot-'+n);
+    if(!dot)return;
+    dot.classList.remove('active');
+    dot.classList.add('done');
+    dot.textContent='✓';
+    var line=document.getElementById('line-'+n);
+    if(line)line.classList.add('done');
+    if(n<totalSteps){
+      var nd=document.getElementById('dot-'+(n+1));
+      if(nd)nd.classList.add('active');
+      setTimeout(function(){goStep(n+1);},150);
+    } else {
+      var b=document.getElementById('done-banner');
+      if(b)b.style.display='flex';
+    }
+    var lbl=document.getElementById('prog-label');
+    if(lbl)lbl.textContent=(n===totalSteps?n:n+1)+' / '+totalSteps;
+  }
+  function goStep(n){
+    var el=document.getElementById('step-'+n);
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  (function(){setLang(localStorage.getItem('lang')||'fr');})();
+  function setLang(l){
+    localStorage.setItem('lang',l);
+    document.documentElement.lang=l;
+    document.querySelectorAll('[data-fr][data-en]').forEach(function(e){e.textContent=e.dataset[l];});
+    var f=document.getElementById('btn-fr'),n=document.getElementById('btn-en');
+    if(f&&n){f.classList.toggle('on',l==='fr');n.classList.toggle('on',l==='en');}
+  }
+</script>
+</body>
+</html>

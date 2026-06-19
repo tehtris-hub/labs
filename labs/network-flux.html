@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEHTRI-S-Hub Labs — Le Trafic Suspect de la Nuit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0c0f; --bg2:#111418; --bg3:#181c22; --border:#1e2530;
+    --accent:#00e5a0; --accent2:#0af; --accent3:#f05a28; --accent4:#f7c948;
+    --text:#c8d0dc; --text-dim:#5a6580; --text-hi:#eef2f8;
+    --mono:'Share Tech Mono',monospace; --sans:'Barlow',sans-serif; --cond:'Barlow Condensed',sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.65;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 4px);pointer-events:none;z-index:9999;}
+  header{position:sticky;top:0;z-index:100;background:rgba(10,12,15,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;gap:2rem;height:56px;}
+  .logo{font-family:var(--cond);font-weight:900;font-size:1.3rem;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;text-decoration:none;flex-shrink:0;}
+  .logo span{color:var(--text-dim);font-weight:300;}
+  nav{display:flex;gap:0;margin-left:auto;align-items:center;}
+  nav a{font-family:var(--mono);font-size:.75rem;color:var(--text-dim);text-decoration:none;padding:0 1rem;height:56px;display:flex;align-items:center;border-left:1px solid var(--border);transition:color .2s,background .2s;letter-spacing:.05em;}
+  nav a:hover{color:var(--accent4);background:rgba(247,201,72,.04);}
+  nav a.active{color:var(--accent4);border-bottom:2px solid var(--accent4);}
+
+  .lab-hero{padding:4rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+  .breadcrumb{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);letter-spacing:.1em;margin-bottom:1.5rem;}
+  .breadcrumb a{color:var(--text-dim);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--accent4);}
+  .lab-meta-row{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+  .lab-cat{font-family:var(--mono);font-size:.65rem;color:var(--accent4);letter-spacing:.15em;text-transform:uppercase;}
+  .lab-difficulty{font-family:var(--mono);font-size:.6rem;padding:2px 8px;border-radius:2px;border:1px solid #00e5a0;color:#00e5a0;background:rgba(0,229,160,.07);letter-spacing:.08em;}
+  .lab-hero h1{font-family:var(--cond);font-weight:900;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;color:var(--text-hi);letter-spacing:-.01em;margin-bottom:1rem;}
+  .lab-hero h1 em{font-style:normal;color:var(--accent4);}
+  .lab-hero .hero-tag{font-family:var(--mono);font-size:.7rem;color:var(--accent4);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.75rem;}
+  .lab-hero p{max-width:560px;color:var(--text-dim);font-size:.95rem;line-height:1.7;}
+
+  main{max-width:860px;margin:0 auto;padding:0 2rem 6rem;}
+
+  .prog-wrap{position:sticky;top:56px;z-index:90;background:rgba(10,12,15,.95);border-bottom:1px solid var(--border);padding:.6rem 2rem;display:flex;align-items:center;gap:1rem;}
+  .prog-track{display:flex;align-items:center;gap:0;flex:1;}
+  .p-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);color:var(--text-dim);font-family:var(--mono);font-size:.65rem;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .25s;}
+  .p-dot.active{border-color:var(--accent4);color:var(--accent4);}
+  .p-dot.done{background:var(--accent4);border-color:var(--accent4);color:var(--bg);font-size:.8rem;}
+  .p-line{flex:1;min-width:16px;max-width:60px;height:2px;background:var(--border);transition:background .25s;}
+  .p-line.done{background:var(--accent4);}
+  .prog-label{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);letter-spacing:.1em;flex-shrink:0;}
+
+  .done-banner{display:none;background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.3);border-radius:6px;padding:1.5rem 2rem;margin:3rem 0 1rem;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+  .done-banner .done-icon{font-size:2rem;}
+  .done-banner strong{font-family:var(--cond);font-size:1.4rem;color:var(--accent);letter-spacing:.05em;}
+  .done-banner a{font-family:var(--mono);font-size:.8rem;color:var(--accent2);border:1px solid var(--accent2);border-radius:3px;padding:.4rem .9rem;text-decoration:none;transition:background .2s;}
+  .done-banner a:hover{background:rgba(0,170,255,.1);}
+  .mark-done-btn{font-family:var(--mono);font-size:.72rem;background:none;border:1px solid var(--accent4);color:var(--accent4);border-radius:3px;padding:.35rem .9rem;cursor:pointer;letter-spacing:.08em;transition:all .2s;margin-top:1.5rem;}
+  .mark-done-btn:hover{background:var(--accent4);color:var(--bg);}
+
+  .step{margin-bottom:3rem;padding-top:1rem;}
+  .step-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border);}
+  .step-num{font-family:var(--mono);font-size:.65rem;color:var(--accent4);letter-spacing:.15em;text-transform:uppercase;flex-shrink:0;}
+  .step-header h2{font-family:var(--cond);font-weight:700;font-size:1.2rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-hi);}
+  .step p{color:var(--text-dim);font-size:.9rem;line-height:1.65;margin-bottom:.75rem;}
+  .step ul,.step ol{padding-left:1.4rem;color:var(--text-dim);font-size:.9rem;line-height:1.7;margin-bottom:.75rem;}
+  .step li{margin-bottom:.25rem;}
+
+  .concept-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent4);border-radius:4px;padding:1.2rem 1.5rem;margin-bottom:2rem;}
+  .concept-box .cb-tag{font-family:var(--mono);font-size:.6rem;color:var(--accent4);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem;}
+  .concept-box .cb-title{font-family:var(--cond);font-weight:700;font-size:1.1rem;color:var(--text-hi);margin-bottom:.75rem;letter-spacing:.05em;}
+  .concept-box .cb-body{font-size:.9rem;color:var(--text);line-height:1.7;}
+  .concept-box .cb-body strong{color:var(--accent4);}
+
+  pre{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1rem 1.2rem;overflow-x:auto;margin-bottom:1rem;position:relative;}
+  pre code{font-family:var(--mono);font-size:.8rem;color:var(--text);line-height:1.7;}
+  .code-label{font-family:var(--mono);font-size:.6rem;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem;}
+  .todo-line{color:#f7c948;}
+  .comment-line{color:var(--text-dim);}
+  .cmd-line{color:var(--accent);}
+
+  code:not(pre code){font-family:var(--mono);font-size:.82em;color:var(--accent2);background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:1px 5px;}
+
+  .info-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent2);border-radius:4px;padding:.9rem 1.2rem;margin-bottom:1rem;font-size:.88rem;color:var(--text-dim);}
+  .info-box strong{color:var(--text-hi);font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;display:block;margin-bottom:.3rem;}
+
+  details.solution{margin-top:.5rem;}
+  details.solution>summary{cursor:pointer;font-family:var(--mono);font-size:.75rem;color:var(--accent3);letter-spacing:.1em;list-style:none;display:flex;align-items:center;gap:.5rem;padding:.5rem 0;user-select:none;transition:color .2s;}
+  details.solution>summary:hover{color:#ff8060;}
+  details.solution>summary::before{content:'▶';font-size:.6rem;transition:transform .2s;}
+  details[open].solution>summary::before{transform:rotate(90deg);}
+  details.solution .solution-body{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent3);border-radius:4px;padding:1rem 1.2rem;margin-top:.5rem;}
+  details.solution .solution-body p{color:var(--text-dim);font-size:.88rem;margin-bottom:.6rem;}
+
+  .success-box{background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.25);border-radius:4px;padding:1rem 1.2rem;font-size:.88rem;color:var(--text);}
+  .success-box strong{color:var(--accent);font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;display:block;margin-bottom:.4rem;}
+
+  footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;font-family:var(--mono);font-size:.7rem;color:var(--text-dim);letter-spacing:.08em;}
+.i18n-toggle{display:flex;align-items:center;gap:0;margin-left:1.5rem;border:1px solid var(--accent);border-radius:3px;overflow:hidden;flex-shrink:0;}
+  .i18n-toggle button{background:var(--bg2);border:none;cursor:pointer;font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.12em;color:var(--text-dim);padding:5px 12px;line-height:1;transition:background .15s,color .15s;}
+  .i18n-toggle button.on{background:var(--accent);color:#0a0c0f;}
+  .i18n-toggle button:not(.on):hover{background:var(--bg3);color:var(--accent);}
+  .i18n-toggle .i18n-sep{width:1px;background:var(--accent);align-self:stretch;flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="../index.html">TEHTRI-S-Hub <span>/ Labs</span></a>
+  <nav>
+    <a href="../index.html" data-fr="Accueil" data-en="Home">Accueil</a>
+    <a href="../index.html#labs" class="active" data-fr="Labs" data-en="Labs">Labs</a>
+    <a href="../resources.html" data-fr="Ressources" data-en="Resources">Ressources</a>
+    <a href="../resources.html#books" data-fr="Livres" data-en="Books">Livres</a>
+    <a href="../credits.html" data-fr="Crédits" data-en="Credits">Crédits</a>
+  </nav>
+<div class="i18n-toggle"><button id="btn-fr" class="on" onclick="setLang('fr')">FR</button><div class="i18n-sep"></div><button id="btn-en" onclick="setLang('en')">EN</button></div>
+  </header>
+
+<section class="lab-hero">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a> &nbsp;/&nbsp; <a href="../index.html#labs">Labs</a> &nbsp;/&nbsp; <span data-fr="Le Trafic Suspect de la Nuit" data-en="The Suspicious Night Traffic">Le Trafic Suspect de la Nuit</span>
+  </div>
+  <div class="hero-tag" data-fr="Réseau · Surveillance" data-en="Network · Monitoring">Réseau · Surveillance</div>
+  <div class="lab-meta-row">
+    <span class="lab-cat">Lab · Network · ss</span>
+    <span class="lab-difficulty" data-fr="Débutant" data-en="Beginner">Débutant</span>
+  </div>
+  <h1><span data-fr="Le Trafic Suspect" data-en="The Suspicious Traffic">Le Trafic Suspect</span> <em data-fr="de la Nuit" data-en="of the Night">de la Nuit</em></h1>
+  <p data-fr="L'équipe sécurité vient de vous alerter : quelque chose envoie des requêtes HTTP vers 10.0.0.10:8080 toutes les 30 secondes. Qui fait ça ? Quand ? Pourquoi ? C'est votre job de le découvrir — et d'arrêter ça." data-en="The security team just alerted you: something is sending HTTP requests to 10.0.0.10:8080 every 30 seconds. Who does that? When? Why? It's your job to find out — and stop it.">L'équipe sécurité vient de vous alerter : quelque chose envoie des requêtes HTTP vers 10.0.0.10:8080 toutes les 30 secondes. Qui fait ça ? Quand ? Pourquoi ? C'est votre job de le découvrir — et d'arrêter ça.</p>
+</section>
+
+<!-- PROGRESS BAR -->
+<div class="prog-wrap">
+  <div class="prog-track">
+    <div class="p-dot active" id="dot-1" onclick="goStep(1)">1</div>
+    <div class="p-line" id="line-1"></div>
+    <div class="p-dot" id="dot-2" onclick="goStep(2)">2</div>
+    <div class="p-line" id="line-2"></div>
+    <div class="p-dot" id="dot-3" onclick="goStep(3)">3</div>
+    <div class="p-line" id="line-3"></div>
+    <div class="p-dot" id="dot-4" onclick="goStep(4)">4</div>
+  </div>
+  <span class="prog-label" id="prog-label">1 / 4</span>
+</div>
+
+<main>
+
+  <!-- STEP 1 -->
+  <div class="step" id="step-1">
+    <div class="step-header">
+      <span class="step-num">01 //</span>
+      <h2 data-fr="Concept : Les Ports et Connexions" data-en="Concept: Ports and Connections">Concept : Les Ports et Connexions</h2>
+    </div>
+
+    <div class="concept-box">
+      <div class="cb-tag" data-fr="Concept clé" data-en="Key concept">Concept clé</div>
+      <div class="cb-title" data-fr="Votre ordinateur a 65535 portes — et il faut savoir lesquelles sont ouvertes" data-en="Your computer has 65535 doors — and you need to know which ones are open">Votre ordinateur a 65535 portes — et il faut savoir lesquelles sont ouvertes</div>
+      <div class="cb-body" data-fr="Chaque service qui communique sur le réseau utilise un 'port' — une porte numérotée. HTTP = porte 80. HTTPS = porte 443. SSH = porte 22. Quand un programme fait une connexion sortante, ça ressemble à 'sortie par la porte 54321 vers le voisin port 8080'. ss liste toutes ces connexions en cours." data-en="Every service communicating on the network uses a 'port' — a numbered door. HTTP = door 80. HTTPS = door 443. SSH = door 22. When a program makes an outgoing connection, it's like 'exit through door 54321 to the neighbor's door 8080'. ss lists all these active connections.">Chaque service utilise un <strong>'port'</strong> — une porte numérotée. HTTP = porte 80. HTTPS = 443. SSH = 22. Quand un programme fait une connexion sortante : <strong>'sortie par la porte 54321 vers le voisin port 8080'</strong>. <code>ss</code> liste toutes ces connexions en cours.</div>
+    </div>
+
+    <button class="mark-done-btn" onclick="markDone(1)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step" id="step-2">
+    <div class="step-header">
+      <span class="step-num">02 //</span>
+      <h2 data-fr="Identifier les connexions suspectes" data-en="Identify suspicious connections">Identifier les connexions suspectes</h2>
+    </div>
+
+    <p data-fr="Utilisons ss et lsof pour voir toutes les connexions réseau actives et trouver celle vers 10.0.0.10:8080." data-en="Let's use ss and lsof to see all active network connections and find the one to 10.0.0.10:8080.">Utilisons <code>ss</code> et <code>lsof</code> pour voir toutes les connexions réseau actives et trouver celle vers 10.0.0.10:8080.</p>
+
+    <div class="code-label">find_suspect.sh</div>
+    <pre><code><span class="comment-line"># Lister toutes les connexions réseau établies</span>
+<span class="todo-line">ss -???
+# TODO : ajouter les bonnes options à ss pour voir :
+# - toutes les connexions (-a)
+# - avec le nom du processus (-p)
+# - en format numérique (-n)</span>
+
+<span class="comment-line"># Version recommandée</span>
+<span class="todo-line">ss -????</span>
+
+<span class="comment-line"># Filtrer sur le port 8080</span>
+<span class="cmd-line">ss -anp | grep 8080</span>
+
+<span class="comment-line"># Alternative : lsof pour voir les connexions par processus</span>
+<span class="todo-line">lsof -???
+# TODO: quelle option de lsof liste les connexions réseau ?
+# Indice : -i pour 'internet'</span>
+<span class="cmd-line">lsof -i</span></code></pre>
+
+    <details class="solution">
+      <summary data-fr="▸ AFFICHER LA SOLUTION (essayez d'abord !)" data-en="▸ SHOW SOLUTION (try first!)">▸ AFFICHER LA SOLUTION (essayez d'abord !)</summary>
+      <div class="solution-body">
+        <p data-fr="Les options de ss : -a (all), -n (numeric), -p (process). Combinez-les :" data-en="The ss options: -a (all), -n (numeric), -p (process). Combine them:">Les options de <code>ss</code> : <code>-a</code> (all), <code>-n</code> (numeric), <code>-p</code> (process).</p>
+        <pre><code><span class="cmd-line">ss -anp</span>
+<span class="cmd-line">ss -anp | grep 8080</span>
+<span class="cmd-line">lsof -i :8080</span></code></pre>
+      </div>
+    </details>
+
+    <button class="mark-done-btn" onclick="markDone(2)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step" id="step-3">
+    <div class="step-header">
+      <span class="step-num">03 //</span>
+      <h2 data-fr="Identifier et tuer le processus" data-en="Identify and kill the process">Identifier et tuer le processus</h2>
+    </div>
+
+    <p data-fr="Vous avez trouvé la connexion suspecte. Maintenant, identifiez quel processus en est responsable et terminez-le." data-en="You found the suspicious connection. Now identify which process is responsible and terminate it.">Vous avez trouvé la connexion suspecte. Maintenant, identifiez quel processus en est responsable et terminez-le.</p>
+
+    <div class="code-label" data-fr="Identification et suppression du processus" data-en="Process identification and termination">Identification et suppression du processus</div>
+    <pre><code><span class="comment-line"># Trouver le PID du processus qui fait les requêtes</span>
+<span class="cmd-line">ss -anp | grep 8080</span>
+<span class="comment-line"># ou</span>
+<span class="cmd-line">lsof -i :8080</span>
+
+<span class="comment-line"># Voir les détails du processus (remplacer PID par l'ID trouvé)</span>
+<span class="cmd-line">ps aux | grep PID</span>
+
+<span class="comment-line"># Tuer le processus proprement</span>
+<span class="cmd-line">kill PID</span>
+
+<span class="comment-line"># Si résistant :</span>
+<span class="cmd-line">kill -9 PID</span>
+
+<span class="comment-line"># Vérifier que la connexion a disparu</span>
+<span class="cmd-line">ss -anp | grep 8080</span></code></pre>
+
+    <button class="mark-done-btn" onclick="markDone(3)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step" id="step-4">
+    <div class="step-header">
+      <span class="step-num">04 //</span>
+      <h2 data-fr="Vérification finale" data-en="Final check">Vérification finale</h2>
+    </div>
+
+    <p data-fr="Confirmez que le trafic est stoppé et cherchez si quelque chose relanćerait ce processus automatiquement au démarrage." data-en="Confirm the traffic is stopped and check if something would restart this process automatically at boot.">Confirmez que le trafic est stoppé et cherchez si quelque chose relaierait ce processus au démarrage.</p>
+
+    <div class="code-label" data-fr="Vérification et recherche de persistance" data-en="Verification and persistence check">Vérification et recherche de persistance</div>
+    <pre><code><span class="comment-line"># Confirmer qu'aucune connexion vers 8080 n'est active</span>
+<span class="cmd-line">ss -anp | grep 8080</span>
+<span class="comment-line"># → doit être vide</span>
+
+<span class="comment-line"># Chercher le script qui lançait ça au démarrage</span>
+<span class="cmd-line">grep -r "10.0.0.10" /etc/cron* /etc/rc* ~/.bashrc 2>/dev/null</span></code></pre>
+
+    <div class="success-box">
+      <strong data-fr="TRAFIC STOPPÉ !" data-en="TRAFFIC STOPPED!">TRAFIC STOPPÉ !</strong>
+      <span data-fr="Le trafic suspect est stoppé. L'équipe sécurité vous dit merci. Cédric dit que c'est pas lui." data-en="The suspicious traffic is stopped. The security team thanks you. Cédric says it wasn't him.">Le trafic suspect est stoppé. L'équipe sécurité vous dit merci. Cédric dit que c'est pas lui.</span>
+    </div>
+
+    <button class="mark-done-btn" onclick="markDone(4)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- DONE BANNER -->
+  <div class="done-banner" id="done-banner">
+    <div class="done-icon">✓</div>
+    <div>
+      <strong data-fr="Lab terminé !" data-en="Lab complete!">Lab terminé !</strong><br>
+      <span style="font-size:.85rem;color:var(--text-dim);" data-fr="Vous avez traqué et neutralisé le trafic suspect. Vous êtes officiellement le chasseur de processus de l'équipe." data-en="You tracked and neutralized the suspicious traffic. You are officially the team's process hunter.">Vous avez traqué et neutralisé le trafic suspect. Vous êtes officiellement le chasseur de processus de l'équipe.</span>
+    </div>
+    <a href="../index.html#labs" data-fr="← Retour aux Labs" data-en="← Back to Labs">← Retour aux Labs</a>
+  </div>
+
+</main>
+
+<footer>
+  TEHTRI-S-Hub Labs &nbsp;·&nbsp; <span data-fr="Le Trafic Suspect de la Nuit" data-en="The Suspicious Night Traffic">Le Trafic Suspect de la Nuit</span> &nbsp;·&nbsp; ss · lsof
+</footer>
+
+
+<script>
+
+  var totalSteps=4;
+  function markDone(n){
+    var dot=document.getElementById('dot-'+n);
+    if(!dot)return;
+    dot.classList.remove('active');
+    dot.classList.add('done');
+    dot.textContent='✓';
+    var line=document.getElementById('line-'+n);
+    if(line)line.classList.add('done');
+    if(n<totalSteps){
+      var nd=document.getElementById('dot-'+(n+1));
+      if(nd)nd.classList.add('active');
+      setTimeout(function(){goStep(n+1);},150);
+    } else {
+      var b=document.getElementById('done-banner');
+      if(b)b.style.display='flex';
+    }
+    var lbl=document.getElementById('prog-label');
+    if(lbl)lbl.textContent=(n===totalSteps?n:n+1)+' / '+totalSteps;
+  }
+  function goStep(n){
+    var el=document.getElementById('step-'+n);
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  (function(){setLang(localStorage.getItem('lang')||'fr');})();
+  function setLang(l){
+    localStorage.setItem('lang',l);
+    document.documentElement.lang=l;
+    document.querySelectorAll('[data-fr][data-en]').forEach(function(e){e.textContent=e.dataset[l];});
+    var f=document.getElementById('btn-fr'),n=document.getElementById('btn-en');
+    if(f&&n){f.classList.toggle('on',l==='fr');n.classList.toggle('on',l==='en');}
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEHTRI-S-Hub Labs — Jimmy a Cassé le Pare-feu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0c0f; --bg2:#111418; --bg3:#181c22; --border:#1e2530;
+    --accent:#00e5a0; --accent2:#0af; --accent3:#f05a28;
+    --text:#c8d0dc; --text-dim:#5a6580; --text-hi:#eef2f8;
+    --mono:'Share Tech Mono',monospace; --sans:'Barlow',sans-serif; --cond:'Barlow Condensed',sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.65;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 4px);pointer-events:none;z-index:9999;}
+  header{position:sticky;top:0;z-index:100;background:rgba(10,12,15,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;gap:2rem;height:56px;}
+  .logo{font-family:var(--cond);font-weight:900;font-size:1.3rem;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;text-decoration:none;flex-shrink:0;}
+  .logo span{color:var(--text-dim);font-weight:300;}
+  nav{display:flex;gap:0;margin-left:auto;align-items:center;}
+  nav a{font-family:var(--mono);font-size:.75rem;color:var(--text-dim);text-decoration:none;padding:0 1rem;height:56px;display:flex;align-items:center;border-left:1px solid var(--border);transition:color .2s,background .2s;letter-spacing:.05em;}
+  nav a:hover{color:var(--accent3);background:rgba(240,90,40,.04);}
+  nav a.active{color:var(--accent3);border-bottom:2px solid var(--accent3);}
+
+  .lab-hero{padding:4rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+  .breadcrumb{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);letter-spacing:.1em;margin-bottom:1.5rem;}
+  .breadcrumb a{color:var(--text-dim);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--accent3);}
+  .lab-meta-row{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+  .lab-cat{font-family:var(--mono);font-size:.65rem;color:var(--accent3);letter-spacing:.15em;text-transform:uppercase;}
+  .lab-difficulty{font-family:var(--mono);font-size:.6rem;padding:2px 8px;border-radius:2px;border:1px solid #00e5a0;color:#00e5a0;background:rgba(0,229,160,.07);letter-spacing:.08em;}
+  .lab-hero h1{font-family:var(--cond);font-weight:900;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;color:var(--text-hi);letter-spacing:-.01em;margin-bottom:1rem;}
+  .lab-hero h1 em{font-style:normal;color:var(--accent3);}
+  .lab-hero .hero-tag{font-family:var(--mono);font-size:.7rem;color:var(--accent3);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.75rem;}
+  .lab-hero p{max-width:560px;color:var(--text-dim);font-size:.95rem;line-height:1.7;}
+
+  main{max-width:860px;margin:0 auto;padding:0 2rem 6rem;}
+
+  .prog-wrap{position:sticky;top:56px;z-index:90;background:rgba(10,12,15,.95);border-bottom:1px solid var(--border);padding:.6rem 2rem;display:flex;align-items:center;gap:1rem;}
+  .prog-track{display:flex;align-items:center;gap:0;flex:1;}
+  .p-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);color:var(--text-dim);font-family:var(--mono);font-size:.65rem;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .25s;}
+  .p-dot.active{border-color:var(--accent3);color:var(--accent3);}
+  .p-dot.done{background:var(--accent3);border-color:var(--accent3);color:var(--bg);font-size:.8rem;}
+  .p-line{flex:1;min-width:16px;max-width:60px;height:2px;background:var(--border);transition:background .25s;}
+  .p-line.done{background:var(--accent3);}
+  .prog-label{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);letter-spacing:.1em;flex-shrink:0;}
+
+  .done-banner{display:none;background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.3);border-radius:6px;padding:1.5rem 2rem;margin:3rem 0 1rem;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+  .done-banner .done-icon{font-size:2rem;}
+  .done-banner strong{font-family:var(--cond);font-size:1.4rem;color:var(--accent);letter-spacing:.05em;}
+  .done-banner a{font-family:var(--mono);font-size:.8rem;color:var(--accent2);border:1px solid var(--accent2);border-radius:3px;padding:.4rem .9rem;text-decoration:none;transition:background .2s;}
+  .done-banner a:hover{background:rgba(0,170,255,.1);}
+  .mark-done-btn{font-family:var(--mono);font-size:.72rem;background:none;border:1px solid var(--accent3);color:var(--accent3);border-radius:3px;padding:.35rem .9rem;cursor:pointer;letter-spacing:.08em;transition:all .2s;margin-top:1.5rem;}
+  .mark-done-btn:hover{background:var(--accent3);color:var(--bg);}
+
+  .step{margin-bottom:3rem;padding-top:1rem;}
+  .step-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border);}
+  .step-num{font-family:var(--mono);font-size:.65rem;color:var(--accent3);letter-spacing:.15em;text-transform:uppercase;flex-shrink:0;}
+  .step-header h2{font-family:var(--cond);font-weight:700;font-size:1.2rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-hi);}
+  .step p{color:var(--text-dim);font-size:.9rem;line-height:1.65;margin-bottom:.75rem;}
+  .step ul,.step ol{padding-left:1.4rem;color:var(--text-dim);font-size:.9rem;line-height:1.7;margin-bottom:.75rem;}
+  .step li{margin-bottom:.25rem;}
+
+  .concept-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent3);border-radius:4px;padding:1.2rem 1.5rem;margin-bottom:2rem;}
+  .concept-box .cb-tag{font-family:var(--mono);font-size:.6rem;color:var(--accent3);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem;}
+  .concept-box .cb-title{font-family:var(--cond);font-weight:700;font-size:1.1rem;color:var(--text-hi);margin-bottom:.75rem;letter-spacing:.05em;}
+  .concept-box .cb-body{font-size:.9rem;color:var(--text);line-height:1.7;}
+  .concept-box .cb-body strong{color:var(--accent3);}
+
+  pre{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1rem 1.2rem;overflow-x:auto;margin-bottom:1rem;position:relative;}
+  pre code{font-family:var(--mono);font-size:.8rem;color:var(--text);line-height:1.7;}
+  .code-label{font-family:var(--mono);font-size:.6rem;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem;}
+  .todo-line{color:#f7c948;}
+  .comment-line{color:var(--text-dim);}
+  .cmd-line{color:var(--accent);}
+
+  code:not(pre code){font-family:var(--mono);font-size:.82em;color:var(--accent2);background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:1px 5px;}
+
+  .info-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent2);border-radius:4px;padding:.9rem 1.2rem;margin-bottom:1rem;font-size:.88rem;color:var(--text-dim);}
+  .info-box strong{color:var(--text-hi);font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;display:block;margin-bottom:.3rem;}
+
+  details.solution{margin-top:.5rem;}
+  details.solution>summary{cursor:pointer;font-family:var(--mono);font-size:.75rem;color:var(--accent3);letter-spacing:.1em;list-style:none;display:flex;align-items:center;gap:.5rem;padding:.5rem 0;user-select:none;transition:color .2s;}
+  details.solution>summary:hover{color:#ff8060;}
+  details.solution>summary::before{content:'▶';font-size:.6rem;transition:transform .2s;}
+  details[open].solution>summary::before{transform:rotate(90deg);}
+  details.solution .solution-body{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent3);border-radius:4px;padding:1rem 1.2rem;margin-top:.5rem;}
+  details.solution .solution-body p{color:var(--text-dim);font-size:.88rem;margin-bottom:.6rem;}
+
+  .success-box{background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.25);border-radius:4px;padding:1rem 1.2rem;font-size:.88rem;color:var(--text);}
+  .success-box strong{color:var(--accent);font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;display:block;margin-bottom:.4rem;}
+
+  footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;font-family:var(--mono);font-size:.7rem;color:var(--text-dim);letter-spacing:.08em;}
+.i18n-toggle{display:flex;align-items:center;gap:0;margin-left:1.5rem;border:1px solid var(--accent);border-radius:3px;overflow:hidden;flex-shrink:0;}
+  .i18n-toggle button{background:var(--bg2);border:none;cursor:pointer;font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.12em;color:var(--text-dim);padding:5px 12px;line-height:1;transition:background .15s,color .15s;}
+  .i18n-toggle button.on{background:var(--accent);color:#0a0c0f;}
+  .i18n-toggle button:not(.on):hover{background:var(--bg3);color:var(--accent);}
+  .i18n-toggle .i18n-sep{width:1px;background:var(--accent);align-self:stretch;flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="../index.html">TEHTRI-S-Hub <span>/ Labs</span></a>
+  <nav>
+    <a href="../index.html" data-fr="Accueil" data-en="Home">Accueil</a>
+    <a href="../index.html#labs" class="active" data-fr="Labs" data-en="Labs">Labs</a>
+    <a href="../resources.html" data-fr="Ressources" data-en="Resources">Ressources</a>
+    <a href="../resources.html#books" data-fr="Livres" data-en="Books">Livres</a>
+    <a href="../credits.html" data-fr="Crédits" data-en="Credits">Crédits</a>
+  </nav>
+<div class="i18n-toggle"><button id="btn-fr" class="on" onclick="setLang('fr')">FR</button><div class="i18n-sep"></div><button id="btn-en" onclick="setLang('en')">EN</button></div>
+  </header>
+
+<section class="lab-hero">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a> &nbsp;/&nbsp; <a href="../index.html#labs">Labs</a> &nbsp;/&nbsp; <span data-fr="Jimmy a Cassé le Pare-feu" data-en="Jimmy Broke the Firewall">Jimmy a Cassé le Pare-feu</span>
+  </div>
+  <div class="hero-tag" data-fr="Réseau · Pare-feu" data-en="Network · Firewall">Réseau · Pare-feu</div>
+  <div class="lab-meta-row">
+    <span class="lab-cat">Lab · Firewall · iptables</span>
+    <span class="lab-difficulty" data-fr="Débutant" data-en="Beginner">Débutant</span>
+  </div>
+  <h1><em>Jimmy</em> <span data-fr="a Cassé le Pare-feu" data-en="Broke the Firewall">a Cassé le Pare-feu</span></h1>
+  <p data-fr="Jimmy voulait 'tester un truc' avec iptables. Résultat : HTTP est bloqué sur toute la machine. Plus personne ne peut accéder au site web de l'entreprise. Jimmy est en vacances jusqu'à lundi. Bonne chance." data-en="Jimmy wanted to 'test something' with iptables. Result: HTTP is blocked on the entire machine. Nobody can access the company website anymore. Jimmy is on vacation until Monday. Good luck.">Jimmy voulait 'tester un truc' avec iptables. Résultat : HTTP est bloqué sur toute la machine. Plus personne ne peut accéder au site web de l'entreprise. Jimmy est en vacances jusqu'à lundi. Bonne chance.</p>
+</section>
+
+<!-- PROGRESS BAR -->
+<div class="prog-wrap">
+  <div class="prog-track">
+    <div class="p-dot active" id="dot-1" onclick="goStep(1)">1</div>
+    <div class="p-line" id="line-1"></div>
+    <div class="p-dot" id="dot-2" onclick="goStep(2)">2</div>
+    <div class="p-line" id="line-2"></div>
+    <div class="p-dot" id="dot-3" onclick="goStep(3)">3</div>
+    <div class="p-line" id="line-3"></div>
+    <div class="p-dot" id="dot-4" onclick="goStep(4)">4</div>
+    <div class="p-line" id="line-4"></div>
+    <div class="p-dot" id="dot-5" onclick="goStep(5)">5</div>
+  </div>
+  <span class="prog-label" id="prog-label">1 / 5</span>
+</div>
+
+<main>
+
+  <!-- STEP 1 -->
+  <div class="step" id="step-1">
+    <div class="step-header">
+      <span class="step-num">01 //</span>
+      <h2 data-fr="Concept : iptables, le videur du réseau" data-en="Concept: iptables, the network bouncer">Concept : iptables, le videur du réseau</h2>
+    </div>
+
+    <div class="concept-box">
+      <div class="cb-tag" data-fr="Concept clé" data-en="Key concept">Concept clé</div>
+      <div class="cb-title" data-fr="iptables, c'est le videur de votre club" data-en="iptables is your club's bouncer">iptables, c'est le videur de votre club</div>
+      <div class="cb-body" data-fr="Chaque paquet réseau qui arrive à votre machine frappe à la porte. iptables consulte ses règles dans l'ordre : 'Port 22 ? Entre (SSH). Port 80 ? Attends, Jimmy a supprimé cette règle — DEHORS.' La règle 'DROP' par défaut signifie : ce qui n'est pas explicitement autorisé est bloqué. Jimmy a mis INPUT en DROP et n'a rien autorisé. Bravo Jimmy." data-en="Every network packet arriving at your machine knocks on the door. iptables checks its rules in order: 'Port 22? Come in (SSH). Port 80? Wait, Jimmy deleted that rule — OUT.' The default 'DROP' rule means: what's not explicitly allowed is blocked. Jimmy set INPUT to DROP and allowed nothing. Well done Jimmy.">Chaque paquet réseau frappe à la porte. iptables vérifie ses règles dans l'ordre : <strong>'Port 22 ? Entre. Port 80 ? Jimmy a supprimé cette règle — DEHORS.'</strong> La règle <code>DROP</code> par défaut = ce qui n'est pas autorisé explicitement est bloqué. Jimmy a mis INPUT en DROP et n'a rien autorisé. Bravo Jimmy.</div>
+    </div>
+
+    <button class="mark-done-btn" onclick="markDone(1)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step" id="step-2">
+    <div class="step-header">
+      <span class="step-num">02 //</span>
+      <h2 data-fr="Inspecter les règles actuelles" data-en="Inspect current rules">Inspecter les règles actuelles</h2>
+    </div>
+
+    <p data-fr="Avant de corriger quoi que ce soit, voyons le désastre que Jimmy a laissé derrière lui." data-en="Before fixing anything, let's see the disaster Jimmy left behind.">Avant de corriger quoi que ce soit, voyons le désastre que Jimmy a laissé derrière lui.</p>
+
+    <div class="code-label">inspect_rules.sh</div>
+    <pre><code><span class="comment-line"># Voir toutes les règles iptables</span>
+<span class="comment-line"># TODO: quelle commande iptables liste les règles ?</span>
+<span class="comment-line"># Indice : sudo iptables -???</span>
+<span class="todo-line">sudo iptables -???</span>
+
+<span class="comment-line"># Version détaillée avec compteurs</span>
+<span class="cmd-line">sudo iptables -L -v -n</span>
+
+<span class="comment-line"># Voir aussi la politique par défaut (INPUT, OUTPUT, FORWARD)</span>
+<span class="cmd-line">sudo iptables -L | head -5</span></code></pre>
+
+    <details class="solution">
+      <summary data-fr="▸ AFFICHER LA SOLUTION (essayez d'abord !)" data-en="▸ SHOW SOLUTION (try first!)">▸ AFFICHER LA SOLUTION (essayez d'abord !)</summary>
+      <div class="solution-body">
+        <p data-fr="L'option -L de iptables liste toutes les règles :" data-en="The -L option of iptables lists all rules:">L'option <code>-L</code> de iptables liste toutes les règles :</p>
+        <pre><code><span class="cmd-line">sudo iptables -L</span>
+<span class="comment-line"># Vous verrez probablement : Chain INPUT (policy DROP)</span>
+<span class="comment-line"># C'est le travail de Jimmy.</span></code></pre>
+      </div>
+    </details>
+
+    <button class="mark-done-btn" onclick="markDone(2)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step" id="step-3">
+    <div class="step-header">
+      <span class="step-num">03 //</span>
+      <h2 data-fr="Autoriser HTTP" data-en="Allow HTTP">Autoriser HTTP</h2>
+    </div>
+
+    <p data-fr="HTTP tourne sur le port 80 en TCP. Il faut ajouter une règle iptables pour autoriser ce trafic entrant." data-en="HTTP runs on port 80 over TCP. We need to add an iptables rule to allow this incoming traffic.">HTTP tourne sur le port 80 en TCP. Il faut ajouter une règle iptables pour autoriser ce trafic entrant.</p>
+
+    <div class="code-label">fix_http.sh</div>
+    <pre><code><span class="comment-line"># HTTP c'est le port 80 en TCP</span>
+<span class="comment-line"># TODO: ajouter la règle pour autoriser HTTP entrant</span>
+<span class="comment-line"># Syntaxe : sudo iptables -A INPUT -p tcp --dport PORT -j ACTION</span>
+<span class="todo-line">sudo iptables -A ????? -p ??? --dport ?? -j ????</span>
+
+<span class="comment-line"># Vérifier que la règle est bien ajoutée</span>
+<span class="cmd-line">sudo iptables -L -n | grep 80</span></code></pre>
+
+    <details class="solution">
+      <summary data-fr="▸ AFFICHER LA SOLUTION (essayez d'abord !)" data-en="▸ SHOW SOLUTION (try first!)">▸ AFFICHER LA SOLUTION (essayez d'abord !)</summary>
+      <div class="solution-body">
+        <p data-fr="INPUT = chaîne d'entrée, tcp = protocole, 80 = port HTTP, ACCEPT = laisser passer :" data-en="INPUT = input chain, tcp = protocol, 80 = HTTP port, ACCEPT = let through:">INPUT = chaîne d'entrée, tcp = protocole, 80 = port HTTP, ACCEPT = laisser passer :</p>
+        <pre><code><span class="cmd-line">sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT</span></code></pre>
+      </div>
+    </details>
+
+    <button class="mark-done-btn" onclick="markDone(3)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step" id="step-4">
+    <div class="step-header">
+      <span class="step-num">04 //</span>
+      <h2 data-fr="Autoriser HTTPS" data-en="Allow HTTPS">Autoriser HTTPS</h2>
+    </div>
+
+    <p data-fr="HTTPS tourne sur le port 443. Et il faut aussi autoriser le trafic établi — sinon les réponses aux requêtes sortantes seraient bloquées !" data-en="HTTPS runs on port 443. And we also need to allow established traffic — otherwise responses to outgoing requests would be blocked!">HTTPS tourne sur le port 443. Et il faut aussi autoriser le trafic établi — sinon les réponses aux requêtes sortantes seraient bloquées !</p>
+
+    <div class="code-label">fix_https.sh</div>
+    <pre><code><span class="comment-line"># HTTPS c'est le port 443 en TCP</span>
+<span class="comment-line"># TODO: même chose pour HTTPS</span>
+<span class="todo-line">sudo iptables -A INPUT -p tcp --dport ??? -j ACCEPT</span>
+
+<span class="comment-line"># Autoriser aussi le trafic établi (important pour les réponses !)</span>
+<span class="cmd-line">sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT</span></code></pre>
+
+    <details class="solution">
+      <summary data-fr="▸ AFFICHER LA SOLUTION" data-en="▸ SHOW SOLUTION">▸ AFFICHER LA SOLUTION</summary>
+      <div class="solution-body">
+        <pre><code><span class="cmd-line">sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT</span>
+<span class="cmd-line">sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT</span></code></pre>
+      </div>
+    </details>
+
+    <button class="mark-done-btn" onclick="markDone(4)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step" id="step-5">
+    <div class="step-header">
+      <span class="step-num">05 //</span>
+      <h2 data-fr="Vérifier et sauvegarder" data-en="Verify and save">Vérifier et sauvegarder</h2>
+    </div>
+
+    <p data-fr="Vérifiez que tout fonctionne, puis sauvegardez les règles pour qu'elles survivent au prochain redémarrage. (Ce que Jimmy n'a pas fait.)" data-en="Verify everything works, then save the rules so they survive the next reboot. (Which Jimmy didn't do.)">Vérifiez que tout fonctionne, puis sauvegardez les règles pour qu'elles survivent au prochain redémarrage. (Ce que Jimmy n'a pas fait.)</p>
+
+    <div class="code-label" data-fr="Vérification et sauvegarde" data-en="Verification and save">Vérification et sauvegarde</div>
+    <pre><code><span class="comment-line"># Voir toutes les règles finales</span>
+<span class="cmd-line">sudo iptables -L -n -v</span>
+
+<span class="comment-line"># Tester qu'HTTP fonctionne</span>
+<span class="cmd-line">curl -I http://localhost</span>
+
+<span class="comment-line"># Sauvegarder les règles (pour qu'elles survivent au reboot)</span>
+<span class="cmd-line">sudo iptables-save > /etc/iptables/rules.v4</span></code></pre>
+
+    <div class="success-box">
+      <strong data-fr="HTTP EST DE RETOUR !" data-en="HTTP IS BACK!">HTTP EST DE RETOUR !</strong>
+      <span data-fr="HTTP est de retour ! Le site fonctionne. Jimmy reçoit un mail de 'félicitations' à son retour de vacances. Merci Jimmy." data-en="HTTP is back! The site works. Jimmy gets a 'congratulations' email when he returns from vacation. Thanks Jimmy.">HTTP est de retour ! Le site fonctionne. Jimmy reçoit un mail de 'félicitations' à son retour de vacances. Merci Jimmy.</span>
+    </div>
+
+    <button class="mark-done-btn" onclick="markDone(5)" data-fr="✓ Marquer comme fait" data-en="✓ Mark as done">✓ Marquer comme fait</button>
+  </div>
+
+  <!-- DONE BANNER -->
+  <div class="done-banner" id="done-banner">
+    <div class="done-icon">✓</div>
+    <div>
+      <strong data-fr="Lab terminé !" data-en="Lab complete!">Lab terminé !</strong><br>
+      <span style="font-size:.85rem;color:var(--text-dim);" data-fr="Vous avez réparé ce que Jimmy a cassé. Vous êtes le héros de l'équipe. Jimmy est toujours en vacances." data-en="You fixed what Jimmy broke. You are the team's hero. Jimmy is still on vacation.">Vous avez réparé ce que Jimmy a cassé. Vous êtes le héros de l'équipe. Jimmy est toujours en vacances.</span>
+    </div>
+    <a href="../index.html#labs" data-fr="← Retour aux Labs" data-en="← Back to Labs">← Retour aux Labs</a>
+  </div>
+
+</main>
+
+<footer>
+  TEHTRI-S-Hub Labs &nbsp;·&nbsp; <span data-fr="Jimmy a Cassé le Pare-feu" data-en="Jimmy Broke the Firewall">Jimmy a Cassé le Pare-feu</span> &nbsp;·&nbsp; iptables
+</footer>
+
+
+<script>
+
+  var totalSteps=5;
+  function markDone(n){
+    var dot=document.getElementById('dot-'+n);
+    if(!dot)return;
+    dot.classList.remove('active');
+    dot.classList.add('done');
+    dot.textContent='✓';
+    var line=document.getElementById('line-'+n);
+    if(line)line.classList.add('done');
+    if(n<totalSteps){
+      var nd=document.getElementById('dot-'+(n+1));
+      if(nd)nd.classList.add('active');
+      setTimeout(function(){goStep(n+1);},150);
+    } else {
+      var b=document.getElementById('done-banner');
+      if(b)b.style.display='flex';
+    }
+    var lbl=document.getElementById('prog-label');
+    if(lbl)lbl.textContent=(n===totalSteps?n:n+1)+' / '+totalSteps;
+  }
+  function goStep(n){
+    var el=document.getElementById('step-'+n);
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  (function(){setLang(localStorage.getItem('lang')||'fr');})();
+  function setLang(l){
+    localStorage.setItem('lang',l);
+    document.documentElement.lang=l;
+    document.querySelectorAll('[data-fr][data-en]').forEach(function(e){e.textContent=e.dataset[l];});
+    var f=document.getElementById('btn-fr'),n=document.getElementById('btn-en');
+    if(f&&n){f.classList.toggle('on',l==='fr');n.classList.toggle('on',l==='en');}
+  }
+</script>
+</body>
+</html>
