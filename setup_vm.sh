@@ -128,39 +128,45 @@ rsync -a /home/ /backup/" > "$dir/documents/it/backup.sh"
 }
 
 # ── password ──────────────────────────────────────────────────────────────────
+# Lab scenario : cedric existe avec le mot de passe 'password' (faible, compte actif)
+# L'étudiant doit : bloquer (usermod -L) → changer (passwd → fait_1_3ffort,C3dric) → débloquer (usermod -U)
 lab_password() {
   banner "password"
   pkg passwd
 
   if ! id cedric &>/dev/null; then
     useradd -m -s /bin/bash cedric
-    echo "cedric:azerty123" | chpasswd
-    ok "Utilisateur 'cedric' créé (mdp : azerty123)"
-  else
-    echo "cedric:azerty123" | chpasswd
-    info "Mot de passe de 'cedric' réinitialisé."
+    ok "Utilisateur 'cedric' créé"
   fi
 
-  usermod -L cedric
-  ok "Compte 'cedric' verrouillé."
+  # Mot de passe volontairement faible — c'est l'état initial du lab
+  echo "cedric:password" | chpasswd
+  # Compte actif (non verrouillé) — l'étudiant le verrouille lui-même à l'étape 3
+  usermod -U cedric 2>/dev/null || true
 
   local dir; dir=$(student_dir password)
   cat > "$dir/TICKET_001.txt" <<'EOF'
-TICKET #001 — Urgence RH
-========================
-Cedric ne peut plus se connecter depuis ce matin.
-Message affiché : "This account is currently not available."
+TICKET #001 — Alerte Sécurité
+==============================
+Audit de routine : le compte de Cédric utilise un mot de passe figurant
+dans tous les dictionnaires d'attaque connus.
 
-Son responsable a besoin qu'il accède au serveur avant 17h.
+Mot de passe actuel : password
+(Oui. Vraiment. "password".)
 
 Actions attendues :
-  1. Vérifier l'état du compte (passwd -S cedric)
-  2. Déverrouiller le compte (usermod -U)
-  3. Forcer un nouveau mot de passe (passwd cedric)
-     Rappel : azerty123 n'est pas acceptable.
+  1. Vérifier l'état du compte      : passwd -S cedric  /  chage -l cedric
+  2. Bloquer le compte pendant l'op : sudo usermod -L cedric
+  3. Définir un nouveau mot de passe : sudo passwd cedric
+     Nouveau mot de passe attendu   : fait_1_3ffort,C3dric
+  4. Débloquer le compte             : sudo usermod -U cedric
+
+Validation :
+  su - cedric  →  'password'           doit ÉCHOUER
+  su - cedric  →  'fait_1_3ffort,C3dric' doit RÉUSSIR
 EOF
   own_student "$dir"
-  ok "password : ticket créé dans $dir"
+  ok "password : cedric créé (mdp : password, compte actif)"
 }
 
 # ── aes ───────────────────────────────────────────────────────────────────────
@@ -393,7 +399,7 @@ lab_suricata() {
 
   if [[ -f "$CONF" ]]; then
     [[ -f "${CONF}.orig" ]] || cp "$CONF" "${CONF}.orig"
-    sed -i "s/interface: ${IFACE}/interface: eth9/" "$CONF"
+    sed -i "s/interface: ${IFACE}/interface: eth99/" "$CONF"
     sed -i 's|^  - suricata.rules|  # - suricata.rules  # désactivé|' "$CONF"
   fi
 
@@ -408,7 +414,7 @@ Interface réseau de cette VM : $IFACE
 Fichier de configuration     : /etc/suricata/suricata.yaml
 
 Problèmes à corriger :
-  1. L'interface configurée (eth9) n'existe pas — remplacer par : $IFACE
+  1. L'interface configurée (eth99) n'existe pas — remplacer par : $IFACE
   2. Les règles de détection sont désactivées
   3. Le service n'est pas démarré
 
@@ -437,7 +443,9 @@ lab_sysmon() {
     info "sysmon déjà installé."
   fi
 
-  rm -f /opt/sysmon/config.xml 2>/dev/null || true
+  # Supprimer la config au bon chemin (sysmon-config.xml, comme attendu par la page du lab)
+  rm -f /opt/sysmon/sysmon-config.xml 2>/dev/null || true
+  rm -f /opt/sysmon/config.xml        2>/dev/null || true
   systemctl stop    sysmon 2>/dev/null || true
   systemctl disable sysmon 2>/dev/null || true
 
@@ -446,17 +454,18 @@ lab_sysmon() {
 Sysmon for Linux est installé mais pas opérationnel.
 
 Problèmes :
-  1. Aucun fichier de configuration XML n'est présent
+  1. Aucun fichier de configuration XML n'est présent (/opt/sysmon/sysmon-config.xml)
   2. Le service n'est pas démarré
 
 Étapes :
-  1. Créer la config             : sudo cp config_minimal.xml /opt/sysmon/config.xml
-  2. Installer la config         : sudo sysmon -i /opt/sysmon/config.xml
-  3. Démarrer le service         : sudo systemctl start sysmon
+  1. Créer le fichier de config  : sudo nano /opt/sysmon/sysmon-config.xml
+     (ou copier le template fourni : sudo cp sysmon-config.xml /opt/sysmon/)
+  2. Charger la config           : sudo sysmon -accepteula -c /opt/sysmon/sysmon-config.xml
+  3. Démarrer le service         : sudo systemctl enable sysmon && sudo systemctl start sysmon
   4. Vérifier les logs           : sudo journalctl -u sysmon -f
 EOF
 
-  cat > "$dir/config_minimal.xml" <<'EOF'
+  cat > "$dir/sysmon-config.xml" <<'EOF'
 <Sysmon schemaversion="4.30">
   <EventFiltering>
     <RuleGroup name="" groupRelation="or">

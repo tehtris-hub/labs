@@ -81,8 +81,7 @@
     width: 100%; max-width: 680px;
     left: 50%;
     top: 100%; /* starts fully below stage */
-    padding: 0 2rem 40vh;
-    animation: roll 135s linear forwards;
+    padding: 0 2rem 2rem;
     animation-play-state: running;
   }
   #reel.paused { animation-play-state: paused; }
@@ -500,7 +499,7 @@
       </div>
     </div>
 
-    <div style="height:100vh"></div>
+    <div style="height:6rem"></div>
   </div><!-- /reel -->
 </div><!-- /stage -->
 
@@ -532,17 +531,44 @@
     if(f&&n){f.classList.toggle('on',l==='fr');n.classList.toggle('on',l==='en');}
   }
 
-  // Calculate scroll distance: reel must travel from top:100% to fully above stage
+  var DURATION = 135000; // ms
+  var finTimer = null;
+
+  function showFin() {
+    document.getElementById('fin').style.display = 'flex';
+  }
+
+  function scheduleFin() {
+    if (finTimer) clearTimeout(finTimer);
+    var reel  = document.getElementById('reel');
+    var stage = document.getElementById('stage');
+    var stageH   = stage.offsetHeight;
+    var reelH    = reel.scrollHeight;
+    // dead space at reel end: 2rem CSS padding-bottom + 6rem spacer div
+    var rem      = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    var spacerH  = 8 * rem; // 2rem padding + 6rem div
+    var contentH = reelH - spacerH;
+    var dist     = stageH + reelH;
+    // time when last content line exits the top of stage
+    var msExit = (stageH + contentH) / dist * DURATION;
+    finTimer = setTimeout(showFin, Math.min(msExit + 208, DURATION));
+  }
+
   function initReel() {
-    var reel = document.getElementById('reel');
+    var reel  = document.getElementById('reel');
     var stage = document.getElementById('stage');
     var stageH = stage.offsetHeight;
-    var reelH = reel.scrollHeight;
-    // move reel up by: stageH (its starting offset) + reelH (its own height)
-    var dist = stageH + reelH;
+    var reelH  = reel.scrollHeight;
+    var dist   = stageH + reelH;
     reel.style.setProperty('--roll-to', '-' + dist + 'px');
   }
-  initReel();
+  function startRoll() {
+    var reel = document.getElementById('reel');
+    initReel();
+    reel.style.animation = 'roll ' + (DURATION / 1000) + 's linear forwards';
+    scheduleFin();
+  }
+  startRoll();
 
   var paused = false;
   function togglePause(){
@@ -554,19 +580,14 @@
   function replayCredits(){
     var reel = document.getElementById('reel');
     document.getElementById('fin').style.display = 'none';
+    if (finTimer) clearTimeout(finTimer);
     reel.style.animation = 'none';
-    reel.offsetHeight; // reflow
-    initReel();
-    reel.style.animation = 'roll 135s linear forwards';
+    reel.offsetHeight;
+    startRoll();
     paused = false;
     document.getElementById('btn-pause').textContent = '⏸ PAUSE';
     reel.classList.remove('paused');
   }
-
-  // show fin overlay when animation ends
-  document.getElementById('reel').addEventListener('animationend', function(){
-    document.getElementById('fin').style.display = 'flex';
-  });
 </script>
 </body>
 </html>

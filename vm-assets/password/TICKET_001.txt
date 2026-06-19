@@ -1,0 +1,18 @@
+TICKET #001 — Alerte Sécurité
+==============================
+Audit de routine : le compte de Cédric utilise un mot de passe figurant
+dans tous les dictionnaires d'attaque connus.
+
+Mot de passe actuel : password
+(Oui. Vraiment. "password".)
+
+Actions attendues :
+  1. Vérifier l'état du compte      : passwd -S cedric  /  chage -l cedric
+  2. Bloquer le compte pendant l'op : sudo usermod -L cedric
+  3. Définir un nouveau mot de passe : sudo passwd cedric
+     Nouveau mot de passe attendu   : fait_1_3ffort,C3dric
+  4. Débloquer le compte             : sudo usermod -U cedric
+
+Validation :
+  su - cedric  →  'password'             doit ÉCHOUER
+  su - cedric  →  'fait_1_3ffort,C3dric' doit RÉUSSIR

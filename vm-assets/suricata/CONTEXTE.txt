@@ -1,0 +1,14 @@
+Suricata IDS est installé mais ne démarre pas correctement.
+
+Fichier de configuration : /etc/suricata/suricata.yaml
+
+Problèmes à corriger :
+  1. L'interface configurée (eth99) n'existe pas
+     → Identifier la vraie interface : ip link show
+     → Corriger : sudo sed -i "s/interface: eth99/interface: VOTRE_IFACE/" /etc/suricata/suricata.yaml
+  2. Les règles de détection sont désactivées
+     → sudo suricata-update
+  3. Le service n'est pas démarré
+     → sudo systemctl enable suricata && sudo systemctl start suricata
+
+Config originale sauvegardée : /etc/suricata/suricata.yaml.orig

@@ -1,0 +1,12 @@
+Sysmon for Linux est installé mais pas opérationnel.
+
+Problèmes :
+  1. Aucun fichier de configuration XML n'est présent (/opt/sysmon/sysmon-config.xml)
+  2. Le service n'est pas démarré
+
+Étapes :
+  1. Créer le fichier de config  : sudo nano /opt/sysmon/sysmon-config.xml
+     (ou copier le template fourni : sudo cp sysmon-config.xml /opt/sysmon/)
+  2. Charger la config           : sudo sysmon -accepteula -c /opt/sysmon/sysmon-config.xml
+  3. Démarrer le service         : sudo systemctl enable sysmon && sudo systemctl start sysmon
+  4. Vérifier les logs           : sudo journalctl -u sysmon -f
