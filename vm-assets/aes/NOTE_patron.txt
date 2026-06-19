@@ -6,6 +6,16 @@ Il est chiffré avec OpenSSL pour des raisons de confidentialité.
 Le mot de passe est l'un de ceux que j'utilise habituellement.
 Vous devriez le reconnaître.
 
+Candidats :
+  - 'Aniki<3'
+  - 'BGduWeb25'
+  - 'Urt1ka1r3'
+
+Commande : openssl enc -d -aes-256-cbc -in Ultra_important_secret.pdf -out Ultra_important.pdf -k 'MOT_DE_PASSE'
+
+⚠ Astuce : si vous faites `cat` sur le fichier chiffré, votre terminal affichera des
+caractères bizarres. Pas de panique : tapez  reset  et appuyez sur Entrée.
+
 Bonne chance.
 
   — Le Patron

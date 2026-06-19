@@ -171,6 +171,11 @@
 
     <p data-fr="Vous avez récupéré votre backup_key.gpg depuis votre ancien ordinateur. Il faut l'importer dans votre trousseau GPG sur la nouvelle machine." data-en="You recovered your backup_key.gpg from your old computer. You need to import it into your GPG keychain on the new machine.">Vous avez récupéré votre <code>backup_key.gpg</code> depuis votre ancien ordinateur. Il faut l'importer dans votre trousseau GPG.</p>
 
+    <div class="info-box">
+      <strong data-fr="MOT DE PASSE REQUIS" data-en="PASSPHRASE REQUIRED">MOT DE PASSE REQUIS</strong>
+      <span data-fr="La clé privée est protégée par une phrase de passe. GPG vous la demandera pendant l'import. Entrez : cyberIsD0pe" data-en="The private key is protected by a passphrase. GPG will ask for it during import. Enter: cyberIsD0pe">La clé privée est protégée par une phrase de passe. GPG vous la demandera pendant l'import. Entrez : <code>cyberIsD0pe</code></span>
+    </div>
+
     <div class="code-label">import_key.sh</div>
     <pre><code><span class="comment-line"># Voir les clés GPG actuellement disponibles</span>
 <span class="cmd-line">gpg --list-keys</span>
@@ -178,6 +183,7 @@
 
 <span class="comment-line"># TODO: Importer la clé privée depuis backup_key.gpg</span>
 <span class="comment-line"># Syntaxe : gpg --import FICHIER</span>
+<span class="comment-line"># → GPG demandera la phrase de passe : cyberIsD0pe</span>
 <span class="todo-line">gpg --?????? backup_key.gpg</span>
 
 <span class="comment-line"># Vérifier que la clé a bien été importée</span>
@@ -187,7 +193,8 @@
       <summary data-fr="▸ AFFICHER LA SOLUTION (essayez d'abord !)" data-en="▸ SHOW SOLUTION (try first!)">▸ AFFICHER LA SOLUTION (essayez d'abord !)</summary>
       <div class="solution-body">
         <p data-fr="L'option pour importer une clé GPG est tout simplement --import :" data-en="The option to import a GPG key is simply --import:">L'option pour importer une clé GPG est tout simplement <code>--import</code> :</p>
-        <pre><code><span class="cmd-line">gpg --import backup_key.gpg</span></code></pre>
+        <pre><code><span class="cmd-line">gpg --import backup_key.gpg</span>
+<span class="comment-line"># Phrase de passe : cyberIsD0pe</span></code></pre>
       </div>
     </details>
 
@@ -206,6 +213,7 @@
     <div class="code-label">decrypt_message.sh</div>
     <pre><code><span class="comment-line"># TODO: Déchiffrer le message du patron</span>
 <span class="comment-line"># Syntaxe : gpg --decrypt FICHIER_CHIFFRE</span>
+<span class="comment-line"># → GPG demandera à nouveau la phrase de passe : cyberIsD0pe</span>
 <span class="todo-line">gpg --?????? message.txt.gpg</span>
 
 <span class="comment-line"># Alternative avec redirection vers un fichier</span>
@@ -219,6 +227,7 @@
       <div class="solution-body">
         <p data-fr="L'option est --decrypt (ou -d en version courte) :" data-en="The option is --decrypt (or -d in short form):">L'option est <code>--decrypt</code> (ou <code>-d</code> en version courte) :</p>
         <pre><code><span class="cmd-line">gpg --decrypt message.txt.gpg</span>
+<span class="comment-line"># Phrase de passe : cyberIsD0pe</span>
 <span class="comment-line"># ou pour sauvegarder dans un fichier :</span>
 <span class="cmd-line">gpg --output message_clair.txt --decrypt message.txt.gpg</span></code></pre>
       </div>

@@ -180,6 +180,11 @@
 <span class="comment-line"># Essayer de l'ouvrir sans mot de passe (spoiler : ça marche pas)</span>
 <span class="cmd-line">cat Ultra_important_secret.pdf</span></code></pre>
 
+    <div class="info-box" style="border-left-color:#f7c948;">
+      <strong style="color:#f7c948;" data-fr="⚠ TERMINAL CASSÉ ? PAS DE PANIQUE" data-en="⚠ BROKEN TERMINAL? DON'T PANIC">⚠ TERMINAL CASSÉ ? PAS DE PANIQUE</strong>
+      <span data-fr="Si vous avez fait cat sur le fichier chiffré, votre terminal affiche des caractères bizarres — c'est normal, les données binaires corrompent l'affichage. Tapez reset (à l'aveugle si nécessaire) et appuyez sur Entrée. Votre terminal reviendra à la normale." data-en="If you ran cat on the encrypted file, your terminal is showing garbled characters — binary data corrupts the display. Type reset (blind if needed) and press Enter. Your terminal will be restored.">Si vous avez fait <code>cat</code> sur le fichier chiffré, votre terminal affiche des caractères bizarres — c'est normal, les données binaires corrompent l'affichage. Tapez <code>reset</code> (à l'aveugle si nécessaire) et appuyez sur Entrée. Votre terminal reviendra à la normale.</span>
+    </div>
+
     <div class="info-box">
       <strong data-fr="COMMENT LE FICHIER A ÉTÉ CHIFFRÉ" data-en="HOW THE FILE WAS ENCRYPTED">COMMENT LE FICHIER A ÉTÉ CHIFFRÉ</strong>
       <span data-fr="Le patron a utilisé : openssl enc -aes-256-cbc -in original.pdf -out Ultra_important_secret.pdf -k MOT_DE_PASSE. Votre mission : retrouver le bon mot de passe parmi les trois candidats." data-en="The boss used: openssl enc -aes-256-cbc -in original.pdf -out Ultra_important_secret.pdf -k PASSWORD. Your mission: find the right password among the three candidates.">Le patron a utilisé : <code>openssl enc -aes-256-cbc -in original.pdf -out secret.pdf -k MOT_DE_PASSE</code>. Votre mission : retrouver le bon mot de passe parmi les trois candidats.</span>
@@ -199,14 +204,14 @@
 
     <div class="code-label">decipher_attempt.sh</div>
     <pre><code><span class="comment-line"># Le patron vous a dit que le mot de passe est l'un de ces trois :
-# - Aniki&lt;3
-# - BGduWeb25
-# - Urt1ka1r3</span>
+# - 'Aniki&lt;3'
+# - 'BGduWeb25'
+# - 'Urt1ka1r3'</span>
 
-<span class="comment-line"># Syntaxe : openssl enc -d -aes-256-cbc -in FICHIER -out SORTIE -k MOT_DE_PASSE</span>
+<span class="comment-line"># Syntaxe : openssl enc -d -aes-256-cbc -in FICHIER -out SORTIE -k 'MOT_DE_PASSE'</span>
 
 <span class="comment-line"># Tentative 1</span>
-<span class="todo-line">openssl enc -d -???-???-??? -in Ultra_important_secret.pdf -out essai1.pdf -k Aniki&lt;3</span>
+<span class="todo-line">openssl enc -d -???-???-??? -in Ultra_important_secret.pdf -out essai1.pdf -k 'Aniki&lt;3'</span>
 
 <span class="comment-line"># TODO: Tentative 2 avec BGduWeb25</span>
 <span class="todo-line">openssl enc -d -???-???-??? -in Ultra_important_secret.pdf -out essai2.pdf -k ???</span>
@@ -218,9 +223,9 @@
       <summary data-fr="▸ AFFICHER LA SOLUTION (essayez d'abord !)" data-en="▸ SHOW SOLUTION (try first!)">▸ AFFICHER LA SOLUTION (essayez d'abord !)</summary>
       <div class="solution-body">
         <p data-fr="Remplacez les ??? par -aes-256-cbc et les mots de passe correspondants :" data-en="Replace ??? with -aes-256-cbc and the corresponding passwords:">Remplacez les <code>???</code> par <code>-aes-256-cbc</code> et les mots de passe correspondants :</p>
-        <pre><code><span class="cmd-line">openssl enc -d -aes-256-cbc -in Ultra_important_secret.pdf -out essai1.pdf -k "Aniki<3"</span>
-<span class="cmd-line">openssl enc -d -aes-256-cbc -in Ultra_important_secret.pdf -out essai2.pdf -k "BGduWeb25"</span>
-<span class="cmd-line">openssl enc -d -aes-256-cbc -in Ultra_important_secret.pdf -out essai3.pdf -k "Urt1ka1r3"</span>
+        <pre><code><span class="cmd-line">openssl enc -d -aes-256-cbc -in Ultra_important_secret.pdf -out essai1.pdf -k 'Aniki&lt;3'</span>
+<span class="cmd-line">openssl enc -d -aes-256-cbc -in Ultra_important_secret.pdf -out essai2.pdf -k 'BGduWeb25'</span>
+<span class="cmd-line">openssl enc -d -aes-256-cbc -in Ultra_important_secret.pdf -out essai3.pdf -k 'Urt1ka1r3'</span>
 <span class="comment-line"># Vérifiez lequel donne un vrai PDF :</span>
 <span class="cmd-line">file essai1.pdf essai2.pdf essai3.pdf</span></code></pre>
       </div>

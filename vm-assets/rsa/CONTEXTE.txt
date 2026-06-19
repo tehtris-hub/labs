@@ -1,0 +1,10 @@
+Vous avez changé d'ordinateur récemment.
+Vous avez pensé à récupérer votre backup_key.gpg. Youpi.
+
+Votre patron a envoyé un nouveau message chiffré : message.txt.gpg
+
+Étapes :
+  1. Importer la clé privée  : gpg --import backup_key.gpg
+     → Phrase de passe : cyberIsD0pe
+  2. Déchiffrer le message   : gpg --output message_clair.txt --decrypt message.txt.gpg
+     → Phrase de passe : cyberIsD0pe

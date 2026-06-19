@@ -165,7 +165,9 @@ EOF
 
 # ── aes ───────────────────────────────────────────────────────────────────────
 # Fichier source : bit-bang-main/Common/beginnerPack/AES_decrypt/Ultra_important_secret.pdf
-# Déjà chiffré avec AES. Mots de passe candidats : Aniki<3 | BGduWeb25 | Urt1ka1r3
+# Déjà chiffré avec AES-256-CBC.
+# Mots de passe candidats (entre guillemets simples) : 'Aniki<3' | 'BGduWeb25' | 'Urt1ka1r3'
+# ⚠ Rappeler à l'étudiant : `cat` sur le fichier chiffré casse le terminal → taper `reset`
 lab_aes() {
   banner "aes"
   pkg openssl file
@@ -178,14 +180,16 @@ lab_aes() {
 
   own_student "$dir"
   ok "aes : Ultra_important_secret.pdf copié dans $dir"
-  info "Mots de passe candidats : Aniki<3 | BGduWeb25 | Urt1ka1r3"
-  info "Déchiffrement : openssl enc -d -aes-256-cbc -in Ultra_important_secret.pdf -out Ultra_important.pdf -k <mdp>"
+  info "Mots de passe candidats : 'Aniki<3' | 'BGduWeb25' | 'Urt1ka1r3'"
+  info "Déchiffrement : openssl enc -d -aes-256-cbc -in Ultra_important_secret.pdf -out Ultra_important.pdf -k 'MOT_DE_PASSE'"
+  warn "Si l'étudiant fait 'cat' sur le fichier chiffré, son terminal sera corrompu — rappeler : taper 'reset' + Entrée"
 }
 
 # ── rsa / GPG ─────────────────────────────────────────────────────────────────
 # Fichiers source : bit-bang-main/Common/beginnerPack/RSA/
-#   backup_key.gpg   — clé privée GPG à importer
+#   backup_key.gpg   — clé privée GPG à importer (protégée par phrase de passe)
 #   message.txt.gpg  — message chiffré à déchiffrer
+# Phrase de passe GPG : cyberIsD0pe  (demandée à l'import ET au déchiffrement)
 lab_rsa() {
   banner "rsa / GPG"
   pkg gnupg
@@ -203,11 +207,14 @@ Votre patron a envoyé un nouveau message chiffré : message.txt.gpg
 
 Étapes :
   1. Importer la clé privée  : gpg --import backup_key.gpg
+     → Phrase de passe : cyberIsD0pe
   2. Déchiffrer le message   : gpg --output message_clair.txt --decrypt message.txt.gpg
+     → Phrase de passe : cyberIsD0pe
 EOF
 
   own_student "$dir"
   ok "rsa : backup_key.gpg + message.txt.gpg copiés dans $dir"
+  info "Phrase de passe GPG : cyberIsD0pe  (import + déchiffrement)"
 }
 
 # ── network-flux ──────────────────────────────────────────────────────────────
